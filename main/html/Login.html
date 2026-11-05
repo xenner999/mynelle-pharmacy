@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mynelle's Pharmacy — Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/Login.css" />
+  </head>
+  <body>
+    <div class="auth-shell">
+      <aside class="auth-aside" aria-hidden="true">
+        <div class="auth-aside-inner">
+          <div class="auth-mark">
+            <img src="../../assets/logooo.png" alt="Mynelle's Pharmacy logo" />
+          </div>
+          <h1>Everything the pharmacy needs, in one place.</h1>
+          <ul class="auth-checklist">
+            <li>Live stock and expiry alerts</li>
+            <li>Batch tracking, oldest stock sold first</li>
+            <li>A record of every sale</li>
+            <li>Separate logins for every cashier</li>
+            <li>Sales and stock analysis</li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="auth-main auth-main-login">
+        <div class="card">
+          <div class="logo-space logo-space-mobile">
+            <img src="../../assets/logooo.png" alt="Mynelle's Pharmacy logo" id="logoImg" />
+          </div>
+
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-subtitle">Sign in to open the dashboard.</p>
+
+          <form id="loginForm" novalidate>
+            <label class="first" for="username">Username or email</label>
+            <div class="field">
+              <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter your username or email"
+                autocomplete="username"
+                required
+              />
+            </div>
+
+            <label for="password">Password</label>
+            <div class="field">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="toggle-pass"
+                id="togglePass"
+                aria-label="Show password"
+                aria-pressed="false"
+              >
+                <svg
+                  id="eyeIcon"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#1b1f27"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a20.6 20.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 5c7 0 11 7 11 7a20.6 20.6 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"
+                  ></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="error-msg" id="errorMsg" role="alert"></div>
+
+            <button type="submit" class="login-btn" id="loginBtn">Login</button>
+            <a href="#" class="forgot" id="forgotLink">Forgot password</a>
+            <a href="Register.html" class="register-link" id="registerLink"
+              >Register admin account</a
+            >
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/auth-store.js"></script>
+    <script src="../js/Login.js"></script>
+  <script src="../js/ui-confirm.js"></script>
+<script src="../js/confirm-hooks.js"></script>
+<script src="../js/ui-assist.js"></script>
+</body>
+</html>

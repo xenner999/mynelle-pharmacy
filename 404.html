@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" /><title>Page not found</title>
+<style>body{font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#f3f4f8;color:#1b2333;text-align:center}a{color:#4338ca;font-weight:600}</style></head>
+<body><div><h1>Page not found</h1><p>That page doesn't exist.</p><p><a id="home" href="/">Go to the start page</a></p></div>
+<script>
+  // On GitHub project sites the app lives at /<repo>/, so "/" would leave it.
+  (function () {
+    var onPages = /\.github\.io$/i.test(location.hostname);
+    var seg = location.pathname.split("/")[1];
+    if (onPages && seg) document.getElementById("home").href = "/" + seg + "/";
+  })();
+</script>
+</body></html>

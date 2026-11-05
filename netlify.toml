@@ -1,0 +1,27 @@
+# Mynelle's Pharmacy - static site. Drag this whole folder (or its zip) into
+# https://app.netlify.com/drop - no build step needed.
+[build]
+  publish = "."
+
+# Keep the system out of search engines and stop it being framed elsewhere.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "same-origin"
+
+# Always fetch the newest scripts/pages after you re-deploy.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/main/js/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/pos/js/*"
+  [headers.values]
+    Cache-Control = "no-cache"

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mynelle's Pharmacy — Admin Registration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/Login.css" />
+  </head>
+  <body>
+    <div class="auth-shell">
+      <aside class="auth-aside" aria-hidden="true">
+        <div class="auth-aside-inner">
+          <div class="auth-mark">
+            <img src="../../assets/logooo.png" alt="Mynelle's Pharmacy logo" />
+          </div>
+          <h1>Set up the pharmacy account.</h1>
+          <ul class="auth-checklist">
+            <li>Create the admin account</li>
+            <li>Enter the private setup code</li>
+            <li>Sign in and add your products</li>
+            <li>Add a login for each cashier</li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="auth-main">
+        <div class="card card-wide">
+          <div class="logo-space logo-space-mobile">
+            <img src="../../assets/logooo.png" alt="Mynelle's Pharmacy logo" id="logoImg" />
+          </div>
+
+          <h2 class="auth-title">Create the admin account</h2>
+          <p class="auth-subtitle">This is the first account for this pharmacy's system.</p>
+
+          <form id="registerForm" novalidate>
+            <label class="first" for="fullName">Full name</label>
+            <div class="field">
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                placeholder="Enter your full name"
+                autocomplete="name"
+                required
+              />
+            </div>
+
+            <label for="email">Email address</label>
+            <div class="field">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email address"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <label for="regUsername">Username</label>
+            <div class="field">
+              <input
+                type="text"
+                id="regUsername"
+                name="username"
+                placeholder="Choose a username"
+                autocomplete="username"
+                required
+              />
+            </div>
+
+            <label for="regPassword">Password</label>
+            <div class="field">
+              <input
+                type="password"
+                id="regPassword"
+                name="password"
+                placeholder="Create a password"
+                autocomplete="new-password"
+                required
+                minlength="8"
+              />
+              <button
+                type="button"
+                class="toggle-pass"
+                id="toggleRegPass"
+                aria-label="Show password"
+                aria-pressed="false"
+              >
+                <svg
+                  id="eyeIconReg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#1b1f27"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a20.6 20.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 5c7 0 11 7 11 7a20.6 20.6 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"
+                  ></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="field-hint">At least 8 characters.</div>
+
+            <label for="confirmPassword">Confirm password</label>
+            <div class="field">
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                placeholder="Re-enter your password"
+                autocomplete="new-password"
+                required
+                minlength="8"
+              />
+            </div>
+
+            <label for="accessCode">Admin access code</label>
+            <div class="field">
+              <input
+                type="password"
+                id="accessCode"
+                name="accessCode"
+                placeholder="Enter the admin setup code"
+                autocomplete="off"
+                required
+              />
+            </div>
+            <div class="field-hint">
+              Provided by whoever set up this system. Prevents random
+              visitors from creating admin accounts.
+            </div>
+
+            <div class="error-msg" id="regErrorMsg" role="alert"></div>
+            <div class="success-msg" id="regSuccessMsg" role="status"></div>
+
+            <button type="submit" class="login-btn" id="registerBtn">
+              Create admin account
+            </button>
+            <a href="Login.html" class="forgot" id="backToLogin"
+              >Back to login</a
+            >
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/auth-store.js"></script>
+    <script src="../js/Register.js"></script>
+  <script src="../js/ui-confirm.js"></script>
+<script src="../js/confirm-hooks.js"></script>
+<script src="../js/ui-assist.js"></script>
+</body>
+</html>

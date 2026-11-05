@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem("mynelle_settings");
+          var g = (raw && JSON.parse(raw).general) || {};
+          document.documentElement.setAttribute("data-theme", g.theme || "light");
+          document.documentElement.setAttribute("data-density", g.density || "comfortable");
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mynelle's Pharmacy — Inventory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/inventory.css" />
+    <link rel="stylesheet" href="../css/back-button.css" />
+    <link rel="stylesheet" href="../css/responsive.css" />
+      <link rel="stylesheet" href="../../assets/uicons/uicons-regular-rounded.css" />
+      <link rel="stylesheet" href="../css/stock-status.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <a class="brand" href="dashboard.html" aria-label="Go to dashboard">
+          <div class="brand-logo">
+            <img src="../../assets/logooo.png" alt="Mynelle's Pharmacy logo" />
+          </div>
+        </a>
+
+        <nav class="side-nav" id="sideNav">
+          <a
+            class="nav-item"
+            href="dashboard.html"
+            data-key="dashboard"
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="3" width="7" height="9" />
+              <rect x="14" y="3" width="7" height="5" />
+              <rect x="14" y="12" width="7" height="9" />
+              <rect x="3" y="16" width="7" height="5" />
+            </svg>
+            Dashboard
+          </a>
+          <a class="nav-item active" href="inventory.html" data-key="inventory">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="8" y="2" width="8" height="4" rx="1" />
+              <path
+                d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"
+              />
+              <path d="M9 12h6M9 16h6" />
+            </svg>
+            Inventory
+          </a>
+          <a class="nav-item" href="sales.html" data-key="sales">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="3 17 9 11 13 15 21 6" />
+              <polyline points="14 6 21 6 21 13" />
+            </svg>
+            Sales
+          </a>
+          <a class="nav-item" href="reports.html" data-key="reports">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="M9 13h6M9 17h6" />
+            </svg>
+            Reports
+          </a>
+          <a class="nav-item" href="analytics.html" data-key="analytics">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 3v18h18" />
+              <path d="M7 15v3M12 10v8M17 6v12" />
+            </svg>
+            Analytics
+          </a>
+          <a class="nav-item" href="alerts.html" data-key="alerts">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+            </svg>
+            Alerts
+          </a>
+        </nav>
+
+      </aside>
+
+      <!-- Main -->
+      <main>
+        <header class="topbar">
+          <div class="search-wrap">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input id="searchInput" type="text" placeholder="Search inventory" autocomplete="off" />
+          </div>
+
+          <div class="topbar-actions">
+            <a class="icon-btn" aria-label="Settings" href="settings.html">
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                />
+              </svg>
+            </a>
+            <button class="icon-btn" aria-label="Notifications">
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+              </svg>
+            </button>
+            <button class="icon-btn" aria-label="Profile">
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="content">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Pharmacy inventory</h2>
+              <div class="panel-head-actions">
+                <a class="add-btn" href="product-images.html">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                  Product images
+                </a>
+                <button class="add-btn">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Add product
+                </button>
+
+                <div class="filter-dropdown" id="filterDropdown">
+                  <button
+                    class="filter-dropdown-toggle"
+                    id="filterToggle"
+                    type="button"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                  >
+                    <span id="filterLabel">All</span>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
+                  <div class="filter-menu" id="filterMenu" role="listbox">
+                    <button
+                      class="filter-option active"
+                      data-filter="all"
+                      role="option"
+                      type="button"
+                    >
+                      All
+                    </button>
+                    <button
+                      class="filter-option"
+                      data-filter="low"
+                      role="option"
+                      type="button"
+                    >
+                      Critical stock
+                    </button>
+                    <button
+                      class="filter-option"
+                      data-filter="expiring"
+                      role="option"
+                      type="button"
+                    >
+                      Expiring soon
+                    </button>
+                    <button
+                      class="filter-option"
+                      data-filter="archived"
+                      role="option"
+                      type="button"
+                    >
+                      Archived
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <div class="table-head">
+                <span>Product ID</span>
+                <span>Product name</span>
+            <span>Category</span>
+                <span>Stock</span>
+                <span>Expiry</span>
+                <span>Unit price</span>
+                <span>Action</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <!-- Add product modal -->
+    <div class="modal-overlay" id="addProductOverlay">
+      <div
+        class="modal-card modal-wide"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="addProductTitle"
+      >
+        <div class="modal-head">
+          <h3 id="addProductTitle">Add product</h3>
+          <button
+            class="modal-close"
+            id="addProductClose"
+            type="button"
+            aria-label="Close"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <form id="addProductForm" class="modal-form" novalidate>
+          <div class="pic-field">
+            <div class="pic-preview" id="picPreview" aria-hidden="true"></div>
+            <div class="pic-body">
+              <label>Picture <span class="pic-opt">(optional, shown on the POS)</span></label>
+              <div class="pic-actions">
+                <button type="button" class="btn-secondary" id="picChoose">Choose picture</button>
+                <button type="button" class="btn-link" id="picRemove" hidden>Remove</button>
+              </div>
+              <span class="field-error" id="errPicture"></span>
+              <input type="file" id="picFile" accept="image/*" hidden />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="fProductId">Product ID</label>
+              <input type="text" id="fProductId" class="settings-input" maxlength="20" autocomplete="off" />
+              <span class="field-error" id="errProductId"></span>
+            </div>
+            <div class="form-field">
+              <label for="fCategory">Category *</label>
+              <select id="fCategory" class="settings-select"></select>
+              <span class="field-error" id="errCategory"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="fProductName">Generic name *</label>
+              <input type="text" id="fProductName" class="settings-input" placeholder="e.g. Paracetamol" autocomplete="off" />
+              <span class="field-error" id="errProductName"></span>
+            </div>
+            <div class="form-field">
+              <label for="fDoseNum">Dose</label>
+              <div class="dose-pair">
+                <input type="text" id="fDoseNum" class="settings-input" placeholder="e.g. 500" autocomplete="off" aria-label="Dose amount" />
+                <select id="fDoseUnit" class="settings-select" aria-label="Dose measurement"></select>
+              </div>
+              <span class="field-error" id="errDose"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="fBrand">Brand name</label>
+              <input type="text" id="fBrand" class="settings-input" placeholder="e.g. Biogesic" autocomplete="off" />
+              <span class="field-error" id="errBrand"></span>
+            </div>
+            <div class="form-field">
+              <label for="fBaseUnit">Unit of measurement *</label>
+              <select id="fBaseUnit" class="settings-select"></select>
+            </div>
+          </div>
+
+          <div class="form-row add-only">
+            <div class="form-field">
+              <label for="fStockUnit">Stock entered by</label>
+              <select id="fStockUnit" class="settings-select"></select>
+            </div>
+            <div class="form-field">
+              <label for="fStock" id="fStockLabel">Stock quantity *</label>
+              <input type="number" id="fStock" class="settings-input" min="0" step="1" placeholder="0" />
+              <span class="field-error" id="errStock"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field add-only">
+              <label for="fExpiry" id="fExpiryLabel">Expiry date</label>
+              <input type="date" id="fExpiry" class="settings-input" title="Expiry date — must be at least 1 year from today" />
+              <span class="field-error" id="errExpiry"></span>
+            </div>
+            <div class="form-field">
+              <label for="fPrice" id="fPriceLabel">Unit price *</label>
+              <input type="number" id="fPrice" class="settings-input" min="0" step="0.01" placeholder="0.00" />
+              <span class="field-error" id="errPrice"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="fCriticalLevel">Critical level</label>
+              <input type="number" id="fCriticalLevel" class="settings-input" min="0" step="1" />
+              <span class="field-error" id="errCriticalLevel"></span>
+            </div>
+            <div class="form-field add-only">
+              <label>Total in stock</label>
+              <div class="settings-input total-box" id="fTotalPiecesPreview">0</div>
+            </div>
+          </div>
+
+          <details class="more-options" id="moreOptions">
+            <summary>Packaging, lot number and expiry warning</summary>
+            <div class="more-body">
+              <div class="form-field">
+                <label>Packaging</label>
+                <div id="packagingLevels" class="packaging-levels"></div>
+                <div class="packaging-foot">
+                  <button type="button" class="btn-link" id="btnAddLevel">Add packaging level</button>
+                  <span class="packaging-preview" id="packagingPreview"></span>
+                </div>
+                <span class="field-error" id="errPackaging"></span>
+              </div>
+              <div class="form-row">
+                <div class="form-field add-only">
+                  <label for="fLot">Lot number</label>
+                  <input type="text" id="fLot" class="settings-input" autocomplete="off" />
+                </div>
+                <div class="form-field">
+                  <label for="fExpiryWarning">Expiry warning (days before)</label>
+                  <input type="number" id="fExpiryWarning" class="settings-input" min="1" step="1" />
+                  <span class="field-error" id="errWarn"></span>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <div class="modal-actions">
+            <span class="form-summary" id="formSummary" role="alert"></span>
+            <button type="button" class="btn-secondary" id="addProductCancel">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary" id="addProductSubmit">Add product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+        <div class="modal-overlay" id="stockOverlay">
+      <div class="modal-card modal-wide modal-xl" role="dialog" aria-modal="true" aria-labelledby="stockTitle">
+        <div class="modal-head">
+          <h3 id="stockTitle">Stock</h3>
+          <button class="modal-close" id="stockClose" type="button" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="stock-body">
+          <div class="stock-summary" id="stockSummary"></div>
+          <div class="stock-tabs" role="tablist">
+            <button type="button" role="tab" class="active" data-tab="batches">Batches</button>
+            <button type="button" role="tab" data-tab="receive">Receive stock</button>
+            <button type="button" role="tab" data-tab="adjust">Adjust</button>
+            <button type="button" role="tab" data-tab="history">History</button>
+          </div>
+
+          <div class="stock-pane" data-pane="batches"><div id="batchTable"></div></div>
+
+          <div class="stock-pane" data-pane="receive" hidden>
+            <form id="receiveForm" class="modal-form" novalidate>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="rUnit">Received in</label>
+                  <select id="rUnit" class="settings-select"></select>
+                </div>
+                <div class="form-field">
+                  <label for="rQty">Quantity *</label>
+                  <input type="number" id="rQty" class="settings-input" min="1" step="1" />
+                  <span class="field-error" id="errRQty"></span>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="rLot">Lot number</label>
+                  <input type="text" id="rLot" class="settings-input" autocomplete="off" />
+                </div>
+                <div class="form-field">
+                  <label for="rExpiry" id="rExpiryLabel">Expiry date</label>
+                  <input type="date" id="rExpiry" class="settings-input" title="Expiry date — must be at least 1 year from today" />
+                  <span class="field-error" id="errRExpiry"></span>
+                </div>
+              </div>
+              <div class="opening-total">Adding <strong id="rTotal">0</strong></div>
+              <div class="modal-actions">
+                <button type="submit" class="btn-primary">Receive stock</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="stock-pane" data-pane="adjust" hidden>
+            <form id="adjustForm" class="modal-form" novalidate>
+              <div class="form-field">
+                <label for="aBatch">Batch</label>
+                <select id="aBatch" class="settings-select"></select>
+              </div>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="aQty">Counted quantity *</label>
+                  <input type="number" id="aQty" class="settings-input" min="0" step="1" />
+                  <span class="field-error" id="errAQty"></span>
+                </div>
+                <div class="form-field">
+                  <label for="aReason">Reason</label>
+                  <select id="aReason" class="settings-select">
+                    <option>Count correction</option>
+                    <option>Damaged</option>
+                    <option>Expired</option>
+                    <option>Lost or stolen</option>
+                    <option>Returned to supplier</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-actions">
+                <button type="submit" class="btn-primary">Save adjustment</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="stock-pane" data-pane="history" hidden><div id="historyTable"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="../js/auth-store.js"></script>
+    <script src="../js/guard.js"></script>
+    <script src="../js/settings-store.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/profile-menu.js"></script>
+    <script src="../js/nav-toggle.js"></script>
+    <script src="../js/inventory.js"></script>
+      <script src="../js/back-button.js"></script>
+  <script src="../js/stock-badges.js"></script>
+<script src="../js/ui-confirm.js"></script>
+<script src="../js/confirm-hooks.js"></script>
+<script src="../js/ui-assist.js"></script>
+</body>
+</html>

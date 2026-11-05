@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem("mynelle_settings");
+          var g = (raw && JSON.parse(raw).general) || {};
+          document.documentElement.setAttribute("data-theme", g.theme || "light");
+          document.documentElement.setAttribute("data-density", g.density || "comfortable");
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mynelle's Pharmacy — Inventory valuation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/inventory.css" />
+    <link rel="stylesheet" href="../css/status-detail.css" />
+    <link rel="stylesheet" href="../css/analytics.css" />
+    <link rel="stylesheet" href="../css/responsive.css" />
+      <link rel="stylesheet" href="../../assets/uicons/uicons-regular-rounded.css" />
+      <link rel="stylesheet" href="../css/stock-status.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <a class="brand" href="dashboard.html" aria-label="Go to dashboard">
+          <div class="brand-logo">
+            <img src="../../assets/logooo.png" alt="Mynelle's Pharmacy logo" />
+          </div>
+        </a>
+
+        <nav class="side-nav" id="sideNav">
+          <a class="nav-item" href="dashboard.html" data-key="dashboard">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="9" />
+              <rect x="14" y="3" width="7" height="5" />
+              <rect x="14" y="12" width="7" height="9" />
+              <rect x="3" y="16" width="7" height="5" />
+            </svg>
+            Dashboard
+          </a>
+          <a class="nav-item" href="inventory.html" data-key="inventory">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="8" y="2" width="8" height="4" rx="1" />
+              <path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3" />
+              <path d="M9 12h6M9 16h6" />
+            </svg>
+            Inventory
+          </a>
+          <a class="nav-item" href="sales.html" data-key="sales">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 17 9 11 13 15 21 6" />
+              <polyline points="14 6 21 6 21 13" />
+            </svg>
+            Sales
+          </a>
+          <a class="nav-item" href="reports.html" data-key="reports">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="M9 13h6M9 17h6" />
+            </svg>
+            Reports
+          </a>
+          <a class="nav-item active" href="analytics.html" data-key="analytics">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 3v18h18" />
+              <path d="M7 15v3M12 10v8M17 6v12" />
+            </svg>
+            Analytics
+          </a>
+          <a class="nav-item" href="alerts.html" data-key="alerts">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+            </svg>
+            Alerts
+          </a>
+        </nav>
+
+      </aside>
+
+      <!-- Main -->
+      <main>
+        <header class="topbar">
+          <div class="search-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input id="searchInput" type="text" placeholder="Search inventory" autocomplete="off" />
+          </div>
+          <div class="topbar-actions">
+            <a class="icon-btn" aria-label="Settings" href="settings.html">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </a>
+            <button class="icon-btn" aria-label="Notifications">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+              </svg>
+            </button>
+            <button class="icon-btn" aria-label="Profile">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="content">
+          <div class="detail-page-head">
+            <div>
+              <a class="detail-back" href="analytics.html">
+                <i class="fi fi-rr-arrow-small-left"></i>
+                Analytics
+              </a>
+              <h1>Inventory valuation</h1>
+            </div>
+          </div>
+          <div id="summary"></div>
+          <div class="an-grid">
+            <div class="panel">
+              <h2 class="an-panel-title">Stock value by category</h2>
+              <div id="catDonut"></div>
+            </div>
+            <div class="panel">
+              <h2 class="an-panel-title">Highest value products</h2>
+              <div id="topBars"></div>
+            </div>
+            <div class="panel span-2">
+              <h2 class="an-panel-title">Value by product</h2>
+              <div id="valueTable"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="../js/auth-store.js"></script>
+    <script src="../js/guard.js"></script>
+    <script src="../js/settings-store.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/profile-menu.js"></script>
+    <script src="../js/nav-toggle.js"></script>
+    <script src="../js/page-search.js" data-placeholder="Search analytics"></script>
+    <script src="../js/analytics-lib.js"></script>
+    <script src="../js/inventory-valuation.js"></script>
+  <script src="../js/stock-badges.js"></script>
+<script src="../js/ui-confirm.js"></script>
+<script src="../js/confirm-hooks.js"></script>
+<script src="../js/ui-assist.js"></script>
+</body>
+</html>

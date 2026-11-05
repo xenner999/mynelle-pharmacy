@@ -1,0 +1,96 @@
+/* ---------------------------------------------------------------------
+   Stock status colors — one place to change them.
+   Out of stock = red   |   Low stock = orange   |   Expiring soon = purple
+   --------------------------------------------------------------------- */
+:root {
+  --st-out: #c0303f;
+  --st-out-deep: #8c2732;
+  --st-out-bg: #fdecec;
+  --st-low: #d9640f;
+  --st-low-deep: #9a4309;
+  --st-low-bg: #fff0e2;
+  --st-exp: #7a46c8;
+  --st-exp-deep: #55308f;
+  --st-exp-bg: #f1eafc;
+}
+
+/* Stat cards (Alerts, Dashboard) */
+.stat-card.out { background: var(--st-out); }
+.stat-card.low { background: var(--st-low); }
+.stat-card.exp { background: var(--st-exp); }
+
+/* Detail pages (Low stock / Expiring soon) */
+.detail-stat.tone-low { background: var(--st-low); }
+.detail-stat.tone-exp { background: var(--st-exp); }
+.urgency-pill.tone-low { background: var(--st-low); }
+.urgency-pill.tone-exp { background: var(--st-exp); }
+
+/* Notification dots */
+.tone-out { background: var(--st-out); }
+.tone-low { background: var(--st-low); }
+.tone-expiring { background: var(--st-exp); }
+
+/* Alerts page panels */
+.panel.wide { grid-column: 1 / -1; }
+.panel.out .warn-icon { color: var(--st-out); }
+.panel.low .warn-icon { color: var(--st-low); }
+.panel.exp .warn-icon { color: var(--st-exp); }
+.panel.out .count-badge { background: var(--st-out-bg); color: var(--st-out-deep); }
+.panel.low .count-badge { background: var(--st-low-bg); color: var(--st-low-deep); }
+.panel.exp .count-badge { background: var(--st-exp-bg); color: var(--st-exp-deep); }
+.panel.out { border-top: 3px solid var(--st-out); }
+.panel.low { border-top: 3px solid var(--st-low); }
+.panel.exp { border-top: 3px solid var(--st-exp); }
+.status-pill.out { color: var(--st-out-deep); background: var(--st-out-bg); border-color: #f3c4c4; }
+.status-pill.low { color: var(--st-low-deep); background: var(--st-low-bg); border-color: #f6d2b0; }
+.status-pill.exp { color: var(--st-exp-deep); background: var(--st-exp-bg); border-color: #dccbf3; }
+
+/* Inventory list stock dots */
+.stock-pill.low::before { background: var(--st-low); }
+.stock-pill.out::before { background: var(--st-out); }
+
+/* Sidebar badge: one stack — most urgent type in front, others peeking out behind */
+.nav-badges {
+  margin-left: auto;
+  display: inline-flex;
+  flex-direction: row-reverse; /* first child = right-most (back), last = left-most (front) */
+  align-items: center;
+  padding-right: 2px;
+}
+.nav-badge {
+  box-sizing: border-box;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 11px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 22px;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--card, #fff);
+}
+.nav-badge + .nav-badge { margin-right: -9px; } /* each one overlaps the one behind it */
+.nav-badge.behind { width: 22px; padding: 0; }
+.nav-badge.front { padding: 0 6px; min-width: 26px; height: 26px; line-height: 26px; font-size: 12.5px; }
+.nav-badge.front sup { font-size: 9px; font-weight: 700; margin-left: 1px; vertical-align: top; position: relative; top: 4px; }
+.nav-badge.out { background: var(--st-out); }
+.nav-badge.low { background: var(--st-low); }
+.nav-badge.exp { background: var(--st-exp); }
+.nav-item.active .nav-badge { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9); }
+
+/* POS: items to sell first */
+.prod-card.sellfirst { border-color: var(--st-exp); box-shadow: 0 0 0 1px var(--st-exp) inset; }
+.exp-tag {
+  display: inline-block;
+  align-self: flex-start;
+  margin: 0 0 8px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--st-exp-deep);
+  background: var(--st-exp-bg);
+}
+.prod-card .low { color: var(--st-low); }
+.prod-card .out { color: var(--st-out); }

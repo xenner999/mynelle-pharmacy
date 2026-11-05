@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Clear data - Mynelle's Pharmacy</title>
+<style>
+  body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f3f4f8;margin:0;min-height:100vh;display:grid;place-items:center;color:#1b2333}
+  .card{background:#fff;border:1px solid #e3e6ee;border-radius:16px;padding:28px;max-width:440px;width:92%;box-shadow:0 12px 36px rgba(20,24,60,.08)}
+  h1{font-size:20px;margin:0 0 6px}p{font-size:14px;color:#6b7280;margin:0 0 16px;line-height:1.5}
+  ul{font-size:13px;color:#374151;margin:0 0 18px;padding-left:18px}
+  button{width:100%;padding:12px;border-radius:10px;border:0;font:inherit;font-weight:600;cursor:pointer}
+  .danger{background:#e11d48;color:#fff}.ghost{background:#fff;border:1px solid #d1d5db;margin-top:10px;display:block;text-align:center;text-decoration:none;color:#1b2333;padding:12px;border-radius:10px;font-weight:600;box-sizing:border-box}
+  #msg{margin-top:14px;font-size:14px;color:#175e46;font-weight:600;text-align:center}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Clear all saved data</h1>
+    <p>This wipes everything the app stored <b>in this browser</b>, and returns it to a clean, empty start:</p>
+    <ul id="list"></ul>
+    <button class="danger" id="go">Clear everything</button>
+    <a class="ghost" href="main/html/Login.html">Back to the app</a>
+    <div id="msg"></div>
+  </div>
+<script>
+  var keys = [];
+  for (var i = 0; i < localStorage.length; i++) {
+    var k = localStorage.key(i);
+    if (k.indexOf("mynelle") === 0) keys.push(k);
+  }
+  var list = document.getElementById("list");
+  list.innerHTML = keys.length
+    ? keys.map(function (k) {
+        var n = 0;
+        try { var v = JSON.parse(localStorage.getItem(k)); n = Array.isArray(v) ? v.length + " records" : "saved"; } catch (e) { n = "saved"; }
+        return "<li><code>" + k + "</code> &mdash; " + n + "</li>";
+      }).join("")
+    : "<li>Nothing stored. This browser is already clean.</li>";
+  document.getElementById("go").onclick = function () {
+    if (!keys.length) return;
+    if (!confirm("Delete all Mynelle data in this browser? This cannot be undone.")) return;
+    keys.forEach(function (k) { localStorage.removeItem(k); });
+    list.innerHTML = "<li>Nothing stored. This browser is already clean.</li>";
+    keys = [];
+    document.getElementById("msg").textContent = "Cleared. The app will start empty.";
+  };
+</script>
+<script src="main/js/ui-assist.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+/* Same look as .detail-back / .page-back so every Back link matches */
+.page-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;   /* don't stretch inside flex/grid content areas (Reports) */
+  justify-self: start;
+  width: fit-content;
+  margin: 0 0 10px;
+  padding: 0;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+.page-back-btn:hover {
+  color: var(--blue);
+}
+.page-back-btn:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}

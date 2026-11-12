@@ -52,7 +52,7 @@ function renderIdEntry(){
       <h2 style="margin:0 0 4px;">No cashier accounts yet</h2>
       <p style="font-size:14px;color:#6b7280;margin:0 0 20px;">A cashier account has to be created before anyone can check in or use the POS.</p>
       <button class="btn btn-indigo" id="gateAccountsBtn">Admin sign-in &rarr; create a cashier</button>
-      <p style="font-size:12px;color:#9ca3af;margin-top:14px;">An admin adds the cashier in Manage accounts &rarr; Add account.</p>
+      <p style="font-size:12px;color:#9ea3ad;margin-top:14px;">An admin adds the cashier in Manage accounts &rarr; Add account.</p>
     </div>
   </div>`;
   }
@@ -68,7 +68,7 @@ function renderIdEntry(){
       ${state.idError ? `<div class="id-msg-err">&#9888; ${esc(state.idError)}</div>` : ""}
       <button class="btn btn-indigo" style="margin-top:16px;" id="idSubmitBtn" ${state.busy?'disabled':''}>${state.busy?'Checking...':'Sign in'}</button>
       <button class="link-btn" id="gateDashBtn" style="display:inline-block;margin-top:12px;">&larr; Back to dashboard (admin)</button>
-      <p style="font-size:12px;color:#9ca3af;margin-top:14px;">Your Employee ID and PIN come from the account an admin created for you.</p>
+      <p style="font-size:12px;color:#9ea3ad;margin-top:14px;">Your Employee ID and PIN come from the account an admin created for you.</p>
     </div>
   </div>`;
 }
@@ -108,8 +108,8 @@ function renderDashboard(){
           <p class="record-time">${emp.checkedIn ? esc(emp.checkInLabel) : (outLabel ? esc(outLabel) : '--:--:--')}</p>
           <p class="record-date">${esc(today)}</p>
           <div class="record-sub">
-            <p><span class="lbl">Check-in Time</span><br><span style="color:${emp.checkInLabel?'#16a34a':'#9ca3af'};font-weight:600;">${emp.checkInLabel?esc(emp.checkInLabel):'-- : -- : --'}</span></p>
-            <p><span class="lbl">Check-out Time</span><br><span style="color:${outLabel?'#e11d48':'#9ca3af'};font-weight:${outLabel?600:400};">${outLabel?esc(outLabel):'-- : -- : --'}</span>${!emp.checkedIn && !emp.checkInLabel?'<br><span style="font-size:11px;color:#9ca3af;">Not yet checked in</span>':''}</p>
+            <p><span class="lbl">Check-in Time</span><br><span style="color:${emp.checkInLabel?'#16a34a':'#9ea3ad'};font-weight:600;">${emp.checkInLabel?esc(emp.checkInLabel):'-- : -- : --'}</span></p>
+            <p><span class="lbl">Check-out Time</span><br><span style="color:${outLabel?'#d90416':'#9ea3ad'};font-weight:${outLabel?600:400};">${outLabel?esc(outLabel):'-- : -- : --'}</span>${!emp.checkedIn && !emp.checkInLabel?'<br><span style="font-size:11px;color:#9ea3ad;">Not yet checked in</span>':''}</p>
           </div>
         </div>
         <button class="btn ${emp.checkedIn?'btn-rose':'btn-green'}" style="margin-top:20px;" id="toggleCheckBtn">
@@ -117,7 +117,7 @@ function renderDashboard(){
         </button>
         ${emp.checkedIn
           ? `<a class="btn btn-indigo" style="margin-top:10px;text-decoration:none;" href="pos.html">&#128722; Open POS</a>`
-          : `<p style="font-size:12px;color:#9ca3af;margin:10px 0 0;text-align:center;">Check in first to open the POS.</p>`}
+          : `<p style="font-size:12px;color:#9ea3ad;margin:10px 0 0;text-align:center;">Check in first to open the POS.</p>`}
       </div>
 
       <div class="card">
@@ -128,12 +128,12 @@ function renderDashboard(){
         <table>
           <thead><tr><th>Date</th><th>Check In</th><th>Check Out</th><th>Total Hours</th><th>Status</th></tr></thead>
           <tbody>
-            ${emp.logs.length===0 ? `<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:24px 0;">No time logs yet.</td></tr>` :
+            ${emp.logs.length===0 ? `<tr><td colspan="5" style="text-align:center;color:#9ea3ad;padding:24px 0;">No time logs yet.</td></tr>` :
               emp.logs.map(l => `<tr><td>${esc(l.date)}</td><td>${esc(l.checkIn)}</td><td>${esc(l.checkOut)}</td><td>${esc(l.hours)}</td><td><span class="badge-green" style="${l.status!=='Completed'?'background:#fef3c7;color:#b45309;':''}">${esc(l.status)}</span></td></tr>`).join("")}
           </tbody>
         </table>
         <div style="margin-top:16px;font-size:12px;color:#6b7280;">
-          <p style="font-weight:600;color:#4b5563;margin:0 0 4px;">Note:</p>
+          <p style="font-weight:600;color:#424242;margin:0 0 4px;">Note:</p>
           <p style="margin:0;">• Please check in at the start of your shift and check out at the end.</p>
           <p style="margin:0;">• Accurate time logs help keep records organized.</p>
         </div>
@@ -167,7 +167,7 @@ function renderProfile(emp){
   return `
   <div class="modal-overlay open" id="profileOverlay">
     <div class="modal-card" role="dialog" aria-modal="true" aria-label="My profile">
-      <div class="modal-head"><h3>My profile</h3><button class="link-btn" id="profileClose" aria-label="Close" style="font-size:20px;color:#9ca3af;">&times;</button></div>
+      <div class="modal-head"><h3>My profile</h3><button class="link-btn" id="profileClose" aria-label="Close" style="font-size:20px;color:#9ea3ad;">&times;</button></div>
       <div class="prof-grid">
         <div><span>Name</span>${esc(a.fullName||emp.name)}</div>
         <div><span>Employee ID</span>${esc(emp.id)}</div>
@@ -187,7 +187,7 @@ function renderProfile(emp){
       ${state.pwErr ? `<div class="id-msg-err">&#9888; ${esc(state.pwErr)}</div>` : ""}
       ${state.pwMsg ? `<div class="id-msg-ok">&#10003; ${esc(state.pwMsg)}</div>` : ""}
       <button class="btn btn-indigo" style="margin-top:14px;" id="pwSaveBtn">Update PIN</button>
-      <p style="font-size:11px;color:#9ca3af;margin:10px 0 0;">Estimated pay is gross, before deductions. Your admin can see the full pay report.</p>
+      <p style="font-size:11px;color:#9ea3ad;margin:10px 0 0;">Estimated pay is gross, before deductions. Your admin can see the full pay report.</p>
     </div>
   </div>`;
 }

@@ -21,6 +21,8 @@ function soonestExpiryDays(p){
   });
   return best;
 }
+// RiteMed (Unilab's unibranded line). Accepts the common spellings, e.g. Rightmed.
+function isRiteMed(brand){ return /\b(rite|right)[\s-]*meds?\b/i.test(String(brand||"")); }
 function getCatalog(){
   const images = MynelleStore.getProductImages ? MynelleStore.getProductImages() : {};
   return MynelleStore.getProducts().map(p=>({
@@ -35,11 +37,12 @@ function getCatalog(){
     expDays: soonestExpiryDays(p),   // days until the earliest in-date batch with stock, if it is expiring soon
     search: [p.name,p.brand,p.category,p.id,p.genericName].join(" ").toLowerCase(),
     img: emojiFor(p),
+    ritemed: isRiteMed(p.brand),
   }));
 }
 function getCategories(){
   const used = new Set(getCatalog().map(p=>p.category));
-  return ["All"].concat(MynelleStore.CATEGORIES.filter(c=>used.has(c)), [...used].filter(c=>!MynelleStore.CATEGORIES.includes(c)));
+  return ["All","RiteMed"].concat(MynelleStore.CATEGORIES.filter(c=>used.has(c)), [...used].filter(c=>!MynelleStore.CATEGORIES.includes(c)));
 }
 // Picture if the product has one (Main app > Inventory > Product images), else its icon.
 function thumbInner(image, emoji, alt){
@@ -52,7 +55,9 @@ const state = {
   cart: [],
   category: "All",
   search: "",
-  discount: 0,
+  discount: 0,            // peso amount (used by the Custom amount option)
+  discountType: "none",   // none | senior | pwd | custom
+  discountId: "",         // Senior Citizen / PWD ID number
   showDiscountInput: false,
   showPayment: false,
   payMethod: "Cash",
@@ -78,7 +83,7 @@ function getFiltered(){
   const q = state.search.trim().toLowerCase();
   const rank = p => (p.stock<=0 ? 2 : (p.expDays!==null ? 0 : 1));
   return getCatalog().filter(p=>{
-    const matchCat = state.category==="All" || p.category===state.category;
+    const matchCat = state.category==="All" || (state.category==="RiteMed" ? p.ritemed : p.category===state.category);
     return matchCat && (!q || p.search.includes(q));
   }).sort((a,b)=>{
     // 1) expiring soon (soonest first) so they get sold first, 2) everything else in its normal order, 3) out of stock last
@@ -88,13 +93,33 @@ function getFiltered(){
     return 0;
   });
 }
+// Mandatory discounts. Senior Citizen (RA 9994) and PWD (RA 10754): the VAT is
+// taken off the price first, then 20% off the VAT-free amount. Change the rates here.
+const DISCOUNT_TYPES = {
+  senior: { label:"Senior Citizen", rate:20, vatExempt:true },
+  pwd:    { label:"PWD",            rate:20, vatExempt:true },
+};
+function resetDiscount(){ state.discount=0; state.discountType="none"; state.discountId=""; state.showDiscountInput=false; }
+function discountLabel(type){
+  const t = DISCOUNT_TYPES[type||state.discountType];
+  return t ? t.label+" "+t.rate+"%" : "Discount";
+}
 function cartTotals(){
   const subtotal = state.cart.reduce((s,i)=>s+i.price*i.qty,0);
-  const discountAmt = Math.min(state.discount||0, subtotal);
-  const total = subtotal-discountAmt;
-  // Shelf prices already include VAT, so this is the VAT portion inside the total.
   const rate = vatRate();
-  const vat = rate ? total*rate/(100+rate) : 0;
+  const t = DISCOUNT_TYPES[state.discountType];
+  let discountAmt, vat;
+  if(t){
+    // Shelf prices include VAT: remove it, then apply the discount to what is left.
+    const base = (t.vatExempt && rate) ? subtotal/(1+rate/100) : subtotal;
+    discountAmt = subtotal - base*(1 - t.rate/100);
+    vat = t.vatExempt ? 0 : (rate ? (subtotal-discountAmt)*rate/(100+rate) : 0);
+  }else{
+    discountAmt = state.discountType==="custom" ? Math.min(state.discount||0, subtotal) : 0;
+    // This is the VAT portion inside the total.
+    vat = rate ? (subtotal-discountAmt)*rate/(100+rate) : 0;
+  }
+  const total = subtotal-discountAmt;
   return { subtotal, discountAmt, vat, total };
 }
 
@@ -115,10 +140,9 @@ window.PosSaleSummary = function(){
 function productCard(p){
   const oos = p.stock<=0;
   return `
-  <div class="prod-card ${oos?'oos':''} ${p.expDays!==null&&!oos?'sellfirst':''}">
-    ${p.expDays!==null&&!oos?`<span class="exp-tag" title="Batch expires soon \u2014 offer this one first">Sell first \u00B7 ${p.expDays===0?'expires today':'expires in '+p.expDays+(p.expDays===1?' day':' days')}</span>`:''}
+  <div class="prod-card ${oos?'oos':''}">
     <div class="prod-thumb ${p.image?'has-img':''}">${thumbInner(p.image,p.img,p.name)}</div>
-    <p class="prod-name">${esc(p.name)}</p>
+    <p class="prod-name">${esc(p.name)}${p.ritemed?' <span class="rm-tag" title="RiteMed">RiteMed</span>':""}</p>
     <p class="prod-desc">${esc(p.desc)}</p>
     <div class="prod-meta"><span>Stock: <b class="${p.stock<=0?'out':(p.low?'low':'')}">${p.stock}</b></span><span class="prod-price">${peso(p.price)}</span></div>
     <button class="btn btn-indigo-o prod-add" data-add="${esc(p.id)}" ${oos?'disabled':''}>${oos?'Out of stock':'Add'}</button>
@@ -203,18 +227,23 @@ function renderPOS(){
             </div>`).join("")}
         </div>
 
-        ${state.showDiscountInput ? `
-          <div class="discount-row">
-            <span style="color:#4f46e5;">&#127991;</span>
-            <input id="discountInput" type="number" min="0" placeholder="0.00" value="${state.discount||''}" />
-            <button class="link-btn" style="color:#9ca3af;font-size:16px;" id="closeDiscountBtn">&times;</button>
-          </div>` : `
-          <button class="discount-add" id="openDiscountBtn">+ Add Discount</button>`}
+        <div class="discount-box">
+          <label for="discountType">Discount</label>
+          <select id="discountType" class="discount-select">
+            <option value="none" ${state.discountType==="none"?"selected":""}>No discount</option>
+            ${Object.keys(DISCOUNT_TYPES).map(k=>`<option value="${k}" ${state.discountType===k?"selected":""}>${esc(DISCOUNT_TYPES[k].label)} (${DISCOUNT_TYPES[k].rate}% off)</option>`).join("")}
+            <option value="custom" ${state.discountType==="custom"?"selected":""}>Custom amount</option>
+          </select>
+          ${DISCOUNT_TYPES[state.discountType] ? `
+            <input id="discountId" class="discount-id" type="text" maxlength="30" placeholder="${esc(DISCOUNT_TYPES[state.discountType].label)} ID number" value="${esc(state.discountId)}" />
+            <p class="discount-hint">${DISCOUNT_TYPES[state.discountType].rate}% off every item${DISCOUNT_TYPES[state.discountType].vatExempt?", VAT-exempt":""}.</p>` : ""}
+          ${state.discountType==="custom" ? `<input id="discountInput" class="discount-id" type="number" min="0" placeholder="Amount in pesos (0.00)" value="${state.discount||''}" />` : ""}
+        </div>
 
         <div class="totals">
           <div class="r"><span>Subtotal</span><span>${peso(subtotal)}</span></div>
-          <div class="r"><span>Discount</span><span>${peso(discountAmt)}</span></div>
-          <div class="r"><span>VAT (${vatRate()}%) incl.</span><span>${peso(vat)}</span></div>
+          <div class="r"><span>${esc(discountLabel())}</span><span>${peso(discountAmt)}</span></div>
+          <div class="r"><span>${DISCOUNT_TYPES[state.discountType]?"VAT (exempt)":"VAT ("+vatRate()+"%) incl."}</span><span>${peso(vat)}</span></div>
           <div class="grand"><span>TOTAL AMOUNT</span><span>${peso(total)}</span></div>
         </div>
 
@@ -257,8 +286,7 @@ function renderPaymentPanel(total){
   // blank amount = exact payment (the field shows the total as its placeholder)
   const canComplete = !isCash || state.payTendered === "" || tenderedNum >= total;
   const methods = [
-    {id:"Cash", icon:"&#128181;"}, {id:"Card", icon:"&#128179;"},
-    {id:"GCash", icon:"&#128241;"}, {id:"PayMaya", icon:"&#128179;"}
+    {id:"Cash", icon:"&#128181;"}, {id:"GCash", icon:"&#128241;"}
   ];
   return `
   <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--gray-100);">
@@ -331,8 +359,8 @@ function renderReceipt(){
       </div>
       <div class="dashed">
         <div class="receipt-line"><span>Subtotal</span><span>${peso(r.subtotal)}</span></div>
-        <div class="receipt-line"><span>Discount</span><span>${peso(r.discount)}</span></div>
-        <div class="receipt-line"><span>VAT (${vatRate()}%) incl.</span><span>${peso(r.vat)}</span></div>
+        <div class="receipt-line"><span>${esc(r.discountLabel||"Discount")}${r.discountId?" \u00B7 ID "+esc(r.discountId):""}</span><span>${peso(r.discount)}</span></div>
+        <div class="receipt-line"><span>${r.vatExempt?"VAT (exempt)":"VAT ("+vatRate()+"%) incl."}</span><span>${peso(r.vat)}</span></div>
         <div class="receipt-line grand"><span>Total</span><span>${peso(r.total)}</span></div>
         <div class="receipt-line" style="padding-top:8px;border-top:1px solid var(--gray-100);"><span>Payment Method</span><span>${esc(r.method)}</span></div>
         <div class="receipt-line"><span>Amount Tendered</span><span>${peso(r.tendered)}</span></div>
@@ -349,7 +377,7 @@ function renderReceipt(){
 function bindEvents(){
   if(state.receipt){
     document.getElementById("newSaleBtn").onclick = ()=>{
-      state.receipt=null; state.cart=[]; state.discount=0; state.showPayment=false; state.notice=""; state.showDiscountInput=false;
+      state.receipt=null; state.cart=[]; resetDiscount(); state.showPayment=false; state.notice="";
       state.payTendered=""; state.payNotes=""; state.payMethod="Cash";
       render();
     };
@@ -357,7 +385,7 @@ function bindEvents(){
     return;
   }
 
-  document.getElementById("clearCartBtn").onclick = ()=>{ state.cart=[]; state.discount=0; state.showPayment=false; state.notice=""; render(); };
+  document.getElementById("clearCartBtn").onclick = ()=>{ state.cart=[]; resetDiscount(); state.showPayment=false; state.notice=""; render(); };
 
   document.querySelectorAll("[data-qty]").forEach(btn=>{
     btn.onclick = ()=>{
@@ -375,25 +403,25 @@ function bindEvents(){
       saveHeld();
       // merge into the current cart, then re-check against live stock
       h.cart.forEach(it=>{ const ex = state.cart.find(c=>c.id===it.id); if(ex) ex.qty += it.qty; else state.cart.push(it); });
-      state.discount = state.discount || h.discount || 0;
+      if(state.discountType==="none" && h.discountType){ state.discountType=h.discountType; state.discount=h.discount||0; state.discountId=h.discountId||""; }
       syncCartWithStock(); state.notice=""; render();
     };
   });
   const holdBtn = document.getElementById("holdSaleBtn");
   if(holdBtn) holdBtn.onclick = ()=>{
-    state.held.push({ cart: state.cart, discount: state.discount, at: nowParts().time });
+    state.held.push({ cart: state.cart, discount: state.discount, discountType: state.discountType, discountId: state.discountId, at: nowParts().time });
     saveHeld();
-    state.cart=[]; state.discount=0; state.showPayment=false; state.notice=""; render();
+    state.cart=[]; resetDiscount(); state.showPayment=false; state.notice=""; render();
   };
 
   document.querySelectorAll("[data-remove]").forEach(btn=>{
     btn.onclick = ()=>{ state.cart = state.cart.filter(i=>i.id!==btn.getAttribute("data-remove")); render(); };
   });
 
-  const openDiscountBtn = document.getElementById("openDiscountBtn");
-  if(openDiscountBtn) openDiscountBtn.onclick = ()=>{ state.showDiscountInput=true; render(); setTimeout(()=>document.getElementById("discountInput")?.focus(),0); };
-  const closeDiscountBtn = document.getElementById("closeDiscountBtn");
-  if(closeDiscountBtn) closeDiscountBtn.onclick = ()=>{ state.showDiscountInput=false; render(); };
+  const discountType = document.getElementById("discountType");
+  if(discountType) discountType.onchange = (e)=>{ state.discountType=e.target.value; if(state.discountType!=="custom") state.discount=0; if(!DISCOUNT_TYPES[state.discountType]) state.discountId=""; render(); };
+  const discountId = document.getElementById("discountId");
+  if(discountId) discountId.oninput = (e)=>{ state.discountId = e.target.value; };
   const discountInput = document.getElementById("discountInput");
   if(discountInput) discountInput.oninput = (e)=>{ state.discount = Math.max(0, parseFloat(e.target.value)||0); renderTotalsOnly(); };
 
@@ -409,7 +437,7 @@ function bindEvents(){
   const completeSaleBtn = document.getElementById("completeSaleBtn");
   if(completeSaleBtn) completeSaleBtn.onclick = ()=>{ if(syncCartWithStock()) state.notice="Cart updated to match current stock and prices."; else state.notice=""; state.showPayment = state.cart.length>0; render(); };
   const cancelSaleBtn = document.getElementById("cancelSaleBtn");
-  if(cancelSaleBtn) cancelSaleBtn.onclick = ()=>{ state.cart=[]; state.discount=0; state.notice=""; render(); };
+  if(cancelSaleBtn) cancelSaleBtn.onclick = ()=>{ state.cart=[]; resetDiscount(); state.notice=""; render(); };
 
   const tenderedInput = document.getElementById("tenderedInput");
   if(tenderedInput){
@@ -473,7 +501,7 @@ function finishSale(noPrint){
     sale = MynelleStore.recordSale(
       state.cart.map(i=>({ productId:i.id, qty:i.qty })),
       state.payMethod,
-      { discount:discountAmt, vat, tendered:tenderedNum, change, notes:state.payNotes, cashier:acct.fullName||"" }
+      { discount:discountAmt, vat, tendered:tenderedNum, change, notes:[state.payNotes, DISCOUNT_TYPES[state.discountType] ? discountLabel()+" discount"+(state.discountId?" (ID "+state.discountId+")":"") : ""].filter(Boolean).join(" \u00B7 "), cashier:acct.fullName||"", cashierId:acct.id||"" }
     );
   }catch(err){
     syncCartWithStock();
@@ -486,6 +514,7 @@ function finishSale(noPrint){
     id: sale.id,
     items: state.cart, subtotal, discount: discountAmt, vat, total,
     method: state.payMethod, tendered: tenderedNum, change, notes: state.payNotes,
+    discountLabel: discountLabel(), discountId: DISCOUNT_TYPES[state.discountType] ? state.discountId : "", vatExempt: !!DISCOUNT_TYPES[state.discountType],
     date: nowParts(), noPrint: !!noPrint,
   };
   render();
@@ -497,8 +526,8 @@ function renderTotalsOnly(){
   if(totalsEl){
     totalsEl.innerHTML = `
       <div class="r"><span>Subtotal</span><span>${peso(subtotal)}</span></div>
-      <div class="r"><span>Discount</span><span>${peso(discountAmt)}</span></div>
-      <div class="r"><span>VAT (${vatRate()}%) incl.</span><span>${peso(vat)}</span></div>
+      <div class="r"><span>${esc(discountLabel())}</span><span>${peso(discountAmt)}</span></div>
+      <div class="r"><span>${DISCOUNT_TYPES[state.discountType]?"VAT (exempt)":"VAT ("+vatRate()+"%) incl."}</span><span>${peso(vat)}</span></div>
       <div class="grand"><span>TOTAL AMOUNT</span><span>${peso(total)}</span></div>`;
   }
 }

@@ -11,6 +11,7 @@
   var MAIN = "../../main/html/";
   var KEY = "mynelle_pos_session";
   var onTracker = /timetracker\.html/.test(location.pathname);
+  var onPerf = /performance\.html/.test(location.pathname); // open to any signed-in cashier, checked in or not
 
   function accounts() {
     try { return JSON.parse(localStorage.getItem(MynelleAuth.ACCOUNTS_KEY)) || []; } catch (e) { return []; }
@@ -53,21 +54,21 @@
   };
 
   // Gate the POS: signed-in cashier who has checked in.
-  if (!onTracker && (!account || !TimeStore.openShift(account.id))) {
+  if (!onTracker && !onPerf && (!account || !TimeStore.openShift(account.id))) {
     window.location.replace("timetracker.html");
     return;
   }
 
   // ---- Back to the dashboard: needs an admin/pharmacist sign-in ----
   var GATE_CSS =
-    ".ag-overlay{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}" +
+    ".ag-overlay{position:fixed;inset:0;background:rgba(13, 13, 13,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}" +
     ".ag-overlay.open{display:flex}" +
-    ".ag-card{background:#fff;border-radius:14px;width:100%;max-width:380px;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.3);font-family:inherit}" +
+    ".ag-card{background:#fff;border-radius:14px;width:100%;max-width:380px;padding:24px;box-shadow:0 24px 60px rgba(0, 0, 0,.3);font-family:inherit}" +
     ".ag-card h3{margin:0 0 4px;font-size:17px}.ag-card p{margin:0 0 16px;font-size:13px;color:#6b7280}" +
-    ".ag-card input{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #d1d5db;border-radius:8px;font:inherit;margin-bottom:10px}" +
-    ".ag-err{color:#e11d48;font-size:13px;margin:0 0 10px;min-height:0}" +
-    ".ag-row{display:flex;gap:10px;margin-top:6px}.ag-row button{flex:1;padding:11px;border-radius:8px;border:1px solid #d1d5db;background:#fff;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer}" +
-    ".ag-row .go{background:#312e81;border-color:#312e81;color:#fff}.ag-row button:disabled{opacity:.6;cursor:wait}";
+    ".ag-card input{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #d3d5d9;border-radius:8px;font:inherit;margin-bottom:10px}" +
+    ".ag-err{color:#d90416;font-size:13px;margin:0 0 10px;min-height:0}" +
+    ".ag-row{display:flex;gap:10px;margin-top:6px}.ag-row button{flex:1;padding:11px;border-radius:8px;border:1px solid #d3d5d9;background:#fff;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer}" +
+    ".ag-row .go{background:#032f8a;border-color:#032f8a;color:#fff}.ag-row button:disabled{opacity:.6;cursor:wait}";
   var gateStyle = document.createElement("style");
   gateStyle.textContent = GATE_CSS;
   document.head.appendChild(gateStyle);
@@ -130,15 +131,15 @@
 
   var CSS =
     ".nav-wrap{position:relative}" +
-    ".nav-menu{position:absolute;right:0;top:calc(100% + 10px);width:240px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 18px 44px rgba(15,20,40,.2);overflow:hidden;z-index:50;display:none}" +
+    ".nav-menu{position:absolute;right:0;top:calc(100% + 10px);width:240px;background:#fff;border:1px solid #e3e6ed;border-radius:12px;box-shadow:0 18px 44px rgba(12, 12, 12,.2);overflow:hidden;z-index:50;display:none}" +
     ".nav-wrap.open .nav-menu{display:block}" +
-    ".nav-head{background:#312e81;color:#fff;padding:14px 16px}" +
+    ".nav-head{background:#032f8a;color:#fff;padding:14px 16px}" +
     ".nav-head b{display:block;font-size:14px}" +
     ".nav-head span{font-size:11px;letter-spacing:.4px;text-transform:uppercase;opacity:.7}" +
-    ".nav-item{display:block;width:100%;text-align:left;padding:12px 16px;border:none;background:none;font-weight:600;font-size:13.5px;font-family:inherit;color:#1f2937;cursor:pointer;text-decoration:none}" +
-    ".nav-item:hover{background:#f3f4f6}" +
-    ".nav-item.danger{color:#e11d48;border-top:1px solid #f3f4f6}" +
-    ".nav-item.current{color:#4338ca;background:#eef2ff}";
+    ".nav-item{display:block;width:100%;text-align:left;padding:12px 16px;border:none;background:none;font-weight:600;font-size:13.5px;font-family:inherit;color:#1a1a1a;cursor:pointer;text-decoration:none}" +
+    ".nav-item:hover{background:#f2f4f7}" +
+    ".nav-item.danger{color:#d90416;border-top:1px solid #f2f4f7}" +
+    ".nav-item.current{color:#0442bf;background:#eef3ff}";
   var style = document.createElement("style");
   style.textContent = CSS;
   document.head.appendChild(style);
@@ -157,7 +158,8 @@
 
     var checkedIn = account && TimeStore.openShift(account.id);
     var items =
-      (checkedIn ? '<a class="nav-item' + (onTracker ? "" : " current") + '" href="pos.html">&#128722; Point of Sale</a>' : "") +
+      (checkedIn ? '<a class="nav-item' + (onTracker || onPerf ? "" : " current") + '" href="pos.html">&#128722; Point of Sale</a>' : "") +
+      (account ? '<a class="nav-item' + (onPerf ? " current" : "") + '" href="performance.html">&#128200; My Performance</a>' : "") +
       '<a class="nav-item' + (onTracker ? " current" : "") + '" href="timetracker.html">&#128339; Time Tracker (Check in / out)</a>' +
       '<button class="nav-item" type="button" id="navDash">&#128202; Back to Dashboard (admin)</button>' +
       (account ? '<button class="nav-item danger" type="button" id="navLogout">&#10162; Sign out</button>' : "");

@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="../css/responsive.css" />
       <link rel="stylesheet" href="../../assets/uicons/uicons-regular-rounded.css" />
       <link rel="stylesheet" href="../css/stock-status.css" />
+      <link rel="stylesheet" href="../css/print.css" />
   </head>
   <body>
     <div class="app">
@@ -87,6 +88,14 @@
             </svg>
             Analytics
           </a>
+          <a class="nav-item" href="orders.html" data-key="orders">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            Orders
+          </a>
           <a class="nav-item" href="alerts.html" data-key="alerts">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
@@ -137,7 +146,6 @@
               <button class="settings-tab" data-tab="business" type="button">Business info</button>
               <button class="settings-tab" data-tab="inventory" type="button">Inventory &amp; stock</button>
               <button class="settings-tab" data-tab="pricing" type="button">Pricing</button>
-              <button class="settings-tab" data-tab="security" type="button">Security</button>
               <button class="settings-tab" data-tab="data" type="button">Data</button>
             </nav>
 
@@ -347,49 +355,6 @@
                 </div>
               </section>
 
-              <!-- Security -->
-              <section class="settings-section" data-section="security" hidden>
-                <h2>Security</h2>
-
-                <div class="settings-field stacked">
-                  <label for="secCurrentCode">Current access code</label>
-                  <input
-                    type="password"
-                    id="secCurrentCode"
-                    class="settings-input"
-                    autocomplete="off"
-                  />
-                </div>
-                <div class="settings-field stacked">
-                  <label for="secNewCode">New access code</label>
-                  <input
-                    type="password"
-                    id="secNewCode"
-                    class="settings-input"
-                    autocomplete="off"
-                    minlength="8"
-                  />
-                  <span class="settings-field-hint">At least 8 characters.</span>
-                </div>
-                <div class="settings-field stacked">
-                  <label for="secConfirmCode">Confirm new access code</label>
-                  <input
-                    type="password"
-                    id="secConfirmCode"
-                    class="settings-input"
-                    autocomplete="off"
-                    minlength="8"
-                  />
-                </div>
-
-                <div class="settings-error" id="secError" role="alert"></div>
-
-                <div class="settings-actions">
-                  <button class="btn-primary" type="button" data-save="security" id="secSaveBtn">Update access code</button>
-                  <span class="save-confirm" data-confirm="security">Saved</span>
-                </div>
-              </section>
-
               <!-- Data -->
               <section class="settings-section" data-section="data" hidden>
                 <h2>Data</h2>
@@ -445,6 +410,7 @@
   <script src="../js/stock-badges.js"></script>
 <script src="../js/ui-confirm.js"></script>
 <script src="../js/confirm-hooks.js"></script>
+<script src="../js/print-records.js"></script>
 <script src="../js/ui-assist.js"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mynelle's Pharmacy — Manage accounts</title>
+    <title>Mynelle's Pharmacy — Cashier accounts</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="../css/responsive.css" />
       <link rel="stylesheet" href="../../assets/uicons/uicons-regular-rounded.css" />
       <link rel="stylesheet" href="../css/stock-status.css" />
+      <link rel="stylesheet" href="../css/print.css" />
   </head>
   <body>
     <div class="app">
@@ -86,6 +87,14 @@
               <path d="M7 15v3M12 10v8M17 6v12" />
             </svg>
             Analytics
+          </a>
+          <a class="nav-item" href="orders.html" data-key="orders">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            Orders
           </a>
           <a class="nav-item" href="alerts.html" data-key="alerts">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -171,7 +180,7 @@
               <div id="accountRows"></div>
 
               <div class="empty-state" id="accountsEmpty">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E3E6EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e1e6f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="9" cy="8" r="3.4" />
                   <path d="M2.5 20a6.5 6.5 0 0 1 13 0" />
                   <circle cx="17.5" cy="7" r="2.6" />
@@ -281,7 +290,7 @@
             <span class="field-error" id="errEmail"></span>
           </div>
 
-          <div class="form-field">
+          <div class="form-field" id="fRateField">
             <label for="fRate">Hourly rate (&#8369;)</label>
             <input type="number" id="fRate" class="settings-input" min="0" step="0.01" placeholder="e.g. 85.00" />
             <span class="field-error" id="errRate"></span>
@@ -374,6 +383,7 @@
   <script src="../js/stock-badges.js"></script>
 <script src="../js/ui-confirm.js"></script>
 <script src="../js/confirm-hooks.js"></script>
+<script src="../js/print-records.js"></script>
 <script src="../js/ui-assist.js"></script>
 </body>
 </html>

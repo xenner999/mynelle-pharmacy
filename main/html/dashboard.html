@@ -23,8 +23,10 @@
     />
 
     <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/analytics.css" />
     <link rel="stylesheet" href="../css/responsive.css" />
       <link rel="stylesheet" href="../css/stock-status.css" />
+      <link rel="stylesheet" href="../css/print.css" />
   </head>
   <body>
     <div class="app">
@@ -124,6 +126,14 @@
               <path d="M7 15v3M12 10v8M17 6v12" />
             </svg>
             Analytics
+          </a>
+          <a class="nav-item" href="orders.html" data-key="orders">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            Orders
           </a>
           <a class="nav-item" href="alerts.html" data-key="alerts">
             <svg
@@ -287,7 +297,7 @@
               </div>
             </div>
 
-            <div class="stat-card navy">
+            <div class="stat-card low">
               <div class="stat-top">
                 <span class="stat-label">Low stocks</span>
                 <div class="stat-icon">
@@ -355,8 +365,27 @@
             </div>
           </div>
 
+          <!-- Sales trend -->
+          <div class="panel-grid dash-row">
+            <div class="panel">
+              <div class="an-panel-head">
+                <h2 class="an-panel-title" id="trendTitle">Revenue</h2>
+                <a class="panel-link" href="sales-analysis.html" id="trendLink">Details</a>
+              </div>
+              <div id="periodTabs"></div>
+              <div id="trendChart"></div>
+            </div>
+            <div class="panel">
+              <div class="an-panel-head">
+                <h2 class="an-panel-title">Top products</h2>
+                <a class="panel-link" href="product-performance.html" id="topLink">Details</a>
+              </div>
+              <div id="topBars"></div>
+            </div>
+          </div>
+
           <!-- Panels -->
-          <div class="panel-grid">
+          <div class="panel-grid dash-row">
             <div class="panel">
               <h2>Recent sales</h2>
               <div class="table-wrap" id="recentSales">
@@ -384,17 +413,17 @@
                   <div class="donut-wrap donut-wrap-sm" id="healthDonutWrap"></div>
                   <div class="mini-legend">
                     <div class="legend-row">
-                      <span class="dot" style="background: #4f83d6"></span>
+                      <span class="dot" style="background: #22a06b"></span>
                       <span class="legend-label">Healthy Stock</span>
                       <span class="legend-count" id="legendHealthy">0</span>
                     </div>
                     <div class="legend-row">
-                      <span class="dot" style="background: #1b2447"></span>
+                      <span class="dot" style="background: #d9640f"></span>
                       <span class="legend-label">Low Stock</span>
                       <span class="legend-count" id="legendLowStock">0</span>
                     </div>
                     <div class="legend-row">
-                      <span class="dot" style="background: #b3323f"></span>
+                      <span class="dot" style="background: #d90416"></span>
                       <span class="legend-label">Out of Stock</span>
                       <span class="legend-count" id="legendOutStock">0</span>
                     </div>
@@ -405,18 +434,36 @@
                   <div class="donut-wrap donut-wrap-sm" id="shelfDonutWrap"></div>
                   <div class="mini-legend">
                     <div class="legend-row">
-                      <span class="dot" style="background: #4f83d6"></span>
+                      <span class="dot" style="background: #22a06b"></span>
                       <span class="legend-label">Safe Stock</span>
                       <span class="legend-count" id="legendSafe">0</span>
                     </div>
                     <div class="legend-row">
-                      <span class="dot" style="background: #b4740e"></span>
+                      <span class="dot" style="background: #0511f2"></span>
                       <span class="legend-label">Expiring Soon</span>
                       <span class="legend-count" id="legendExpiringSoon">0</span>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- What to do next + outlook -->
+          <div class="panel-grid dash-row">
+            <div class="panel">
+              <div class="an-panel-head">
+                <h2 class="an-panel-title">Recommended actions</h2>
+                <a class="panel-link" href="alerts.html">Alerts</a>
+              </div>
+              <div id="insActions"></div>
+            </div>
+            <div class="panel">
+              <div class="an-panel-head">
+                <h2 class="an-panel-title">Next 7 days</h2>
+                <a class="panel-link" href="analytics.html">Analytics</a>
+              </div>
+              <div id="insForecast"></div>
             </div>
           </div>
 
@@ -445,10 +492,14 @@
     <script src="../js/nav-toggle.js"></script>
     <script src="../js/global-search.js"></script>
     <script src="../js/sales-common.js"></script>
+    <script src="../js/orders-store.js"></script>
+    <script src="../js/analytics-lib.js"></script>
+    <script src="../js/insights.js"></script>
     <script src="../js/dashboard.js"></script>
   <script src="../js/stock-badges.js"></script>
 <script src="../js/ui-confirm.js"></script>
 <script src="../js/confirm-hooks.js"></script>
+<script src="../js/print-records.js"></script>
 <script src="../js/ui-assist.js"></script>
 </body>
 </html>

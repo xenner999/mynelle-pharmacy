@@ -80,28 +80,28 @@ var SalesView = (function () {
     var st = document.createElement("style");
     st.id = "svStyles";
     st.textContent =
-      ".sv-clickable{cursor:pointer}.sv-clickable:hover{background:rgba(44,74,140,.06)}" +
-      ".sv-clickable:focus-visible{outline:2px solid #2c4a8c;outline-offset:-2px}" +
-      ".sv-view{font-style:normal;font-size:11.5px;font-weight:600;color:#2c4a8c;margin-left:6px;white-space:nowrap}" +
-      ".sv-ov{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}" +
+      ".sv-clickable{cursor:pointer}.sv-clickable:hover{background:rgba(4, 66, 191,.06)}" +
+      ".sv-clickable:focus-visible{outline:2px solid #0442bf;outline-offset:-2px}" +
+      ".sv-view{font-style:normal;font-size:11.5px;font-weight:600;color:#0442bf;margin-left:6px;white-space:nowrap}" +
+      ".sv-ov{position:fixed;inset:0;background:rgba(13, 13, 13,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}" +
       ".sv-ov.open{display:flex}" +
-      ".sv-card{background:var(--card,#fff);color:var(--text,#1b2333);border-radius:16px;width:100%;max-width:620px;max-height:92vh;overflow:auto;box-shadow:0 28px 70px rgba(0,0,0,.3)}" +
+      ".sv-card{background:var(--card,#fff);color:var(--text,#0d0d0d);border-radius:16px;width:100%;max-width:620px;max-height:92vh;overflow:auto;box-shadow:0 28px 70px rgba(0, 0, 0,.3)}" +
       ".sv-head{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 24px 12px}" +
       ".sv-head h3{margin:0;font-size:18px}.sv-head p{margin:3px 0 0;font-size:12.5px;color:var(--text-muted,#6b7280)}" +
       ".sv-x{border:none;background:none;font-size:24px;line-height:1;cursor:pointer;color:var(--text-muted,#6b7280)}" +
       ".sv-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 18px;padding:6px 24px 16px;font-size:13px;font-weight:600}" +
       ".sv-meta span{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted,#6b7280);margin-bottom:2px}" +
       ".sv-body{padding:0 24px 8px}" +
-      ".sv-table{width:100%;border-collapse:collapse;font-size:13px;border:1px solid var(--border,#e3e6ee);border-radius:10px;overflow:hidden}" +
-      ".sv-table th{background:var(--bg,#f3f4f8);text-align:left;font-size:11.5px;color:var(--text-muted,#6b7280);padding:9px 12px}" +
-      ".sv-table td{padding:10px 12px;border-top:1px solid var(--border,#e3e6ee);vertical-align:top}" +
+      ".sv-table{width:100%;border-collapse:collapse;font-size:13px;border:1px solid var(--border,#e1e6f0);border-radius:10px;overflow:hidden}" +
+      ".sv-table th{background:var(--bg,#f2f4f9);text-align:left;font-size:11.5px;color:var(--text-muted,#6b7280);padding:9px 12px}" +
+      ".sv-table td{padding:10px 12px;border-top:1px solid var(--border,#e1e6f0);vertical-align:top}" +
       ".sv-table .n{text-align:right;white-space:nowrap}.sv-table small{display:block;color:var(--text-muted,#6b7280);font-size:11.5px;margin-top:2px}" +
       ".sv-sum{margin:14px 0 4px;font-size:13.5px}.sv-sum div{display:flex;justify-content:space-between;padding:4px 0}" +
-      ".sv-sum .t{border-top:2px solid var(--border,#e3e6ee);margin-top:6px;padding-top:10px;font-size:17px;font-weight:700}" +
+      ".sv-sum .t{border-top:2px solid var(--border,#e1e6f0);margin-top:6px;padding-top:10px;font-size:17px;font-weight:700}" +
       ".sv-note{margin:10px 0 0;font-size:12.5px;color:var(--text-muted,#6b7280)}" +
       ".sv-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 24px 20px}" +
-      ".sv-foot button{padding:10px 16px;border-radius:10px;border:1px solid var(--border,#e3e6ee);background:var(--card,#fff);color:inherit;font-weight:600;font-size:13.5px;font-family:inherit;cursor:pointer}" +
-      ".sv-foot .p{background:var(--navy,#1b2447);border-color:var(--navy,#1b2447);color:#fff}" +
+      ".sv-foot button{padding:10px 16px;border-radius:10px;border:1px solid var(--border,#e1e6f0);background:var(--card,#fff);color:inherit;font-weight:600;font-size:13.5px;font-family:inherit;cursor:pointer}" +
+      ".sv-foot .p{background:var(--navy,#0d0d0d);border-color:var(--navy,#0d0d0d);color:#fff}" +
       "@media(max-width:560px){.sv-meta{grid-template-columns:1fr 1fr}}" +
       "@media print{body *{visibility:hidden}.sv-ov.open,.sv-ov.open *{visibility:visible}.sv-ov.open{position:absolute;background:#fff;display:block}.sv-foot,.sv-x{display:none}}";
     document.head.appendChild(st);
@@ -176,7 +176,7 @@ var SalesView = (function () {
     var div = document.createElement("div");
     div.className = "empty-state";
     div.innerHTML =
-      '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E3E6EE" ' +
+      '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e1e6f0" ' +
       'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
       '<rect x="8" y="2" width="8" height="4" rx="1"/>' +
       '<path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/>' +

@@ -1,27 +1,30 @@
 :root {
+  --cyan: #05aff2;
+  --blue-bright: #0511f2;
+  --brand-red: #d90416;
   --header-h: 86px;
-  --ink: #161b33;
-  --navy-deep: #12172f;
-  --bg: #f3f4f8;
+  --ink: #0d0d0d;
+  --navy-deep: #0d0d0d;
+  --bg: #f2f4f9;
   --card: #ffffff;
-  --border: #e3e6ee;
-  --text: #1b2333;
+  --border: #e1e6f0;
+  --text: #0d0d0d;
   --text-muted: #6b7280;
-  --blue: #2c4a8c;
-  --blue-deep: #1f3564;
+  --blue: #0442bf;
+  --blue-deep: #032f8a;
   --green: #1f7a5c;
   --green-deep: #175e46;
   --gold: #b4740e;
   --gold-deep: #8c5a0a;
-  --navy: #1b2447;
-  --maroon: #7a2036;
-  --maroon-deep: #5e1728;
-  --teal: #0e7c86;
-  --teal-deep: #0b6169;
+  --navy: #0d0d0d;
+  --maroon: #d90416;
+  --maroon-deep: #a00310;
+  --teal: #0580b8;
+  --teal-deep: #04668f;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --shadow-sm: 0 1px 2px rgba(20, 24, 45, 0.06);
-  --shadow-md: 0 6px 20px rgba(20, 24, 45, 0.08);
+  --shadow-sm: 0 1px 2px rgba(17, 17, 17, 0.06);
+  --shadow-md: 0 6px 20px rgba(17, 17, 17, 0.08);
 }
 * {
   box-sizing: border-box;
@@ -111,12 +114,13 @@ nav.side-nav {
 .nav-item.active {
   background: var(--blue);
   color: #fff;
+  box-shadow: inset 4px 0 0 var(--cyan);
 }
 .nav-item.active svg {
   opacity: 1;
 }
 .nav-item:hover:not(.active) {
-  background: rgba(44, 74, 140, 0.08);
+  background: rgba(4, 66, 191, 0.08);
   color: var(--text);
 }
 
@@ -235,7 +239,7 @@ header.topbar {
   gap: 8px;
 }
 .period-btn:hover {
-  background: #e3e6ee;
+  background: #e1e6f0;
 }
 .period-menu {
   position: absolute;
@@ -244,7 +248,7 @@ header.topbar {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(22, 33, 62, 0.1);
+  box-shadow: 0 8px 24px rgba(25, 25, 25, 0.1);
   min-width: 140px;
   padding: 6px;
   display: none;
@@ -303,15 +307,15 @@ header.topbar {
 
 /* ===== Dark theme (Settings → General) ===== */
 :root[data-theme="dark"] {
-  --bg: #0e1428;
-  --card: #171e3a;
-  --border: #2b3358;
-  --text: #e7eaf6;
-  --text-muted: #98a0c4;
-  --blue-deep: #6685d6;
+  --bg: #0d0d0d;
+  --card: #171717;
+  --border: #2e2e2e;
+  --text: #ececec;
+  --text-muted: #a8acb4;
+  --blue-deep: #6f9bf5;
   --gold-deep: #d99a3a;
   --green-deep: #3fae86;
-  --red-deep: #e2727e;
+  --red-deep: #f75d6a;
 }
 :root[data-theme="dark"] body {
   background: var(--bg);
@@ -344,7 +348,7 @@ header.topbar {
   background: rgba(255, 255, 255, 0.06);
 }
 :root[data-theme="dark"] .empty-state svg {
-  stroke: #333c66;
+  stroke: #383838;
 }
 :root[data-theme="dark"] .settings-input,
 :root[data-theme="dark"] .settings-select {
@@ -478,13 +482,13 @@ header.topbar {
 
 :root[data-theme="dark"] .trend-line,
 :root[data-theme="dark"] .trend-dot {
-  stroke: #6f9be6;
+  stroke: #598dfc;
 }
 :root[data-theme="dark"] .trend-area {
-  fill: #6f9be6;
+  fill: #598dfc;
 }
 :root[data-theme="dark"] .bar-fill {
-  background: #6f9be6;
+  background: #598dfc;
 }
 
 .panel-link {
@@ -497,5 +501,5 @@ header.topbar {
   text-decoration: underline;
 }
 :root[data-theme="dark"] .panel-link {
-  color: #8fb0ee;
+  color: #81a8fc;
 }

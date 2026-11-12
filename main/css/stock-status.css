@@ -1,17 +1,20 @@
 /* ---------------------------------------------------------------------
    Stock status colors — one place to change them.
-   Out of stock = red   |   Low stock = orange   |   Expiring soon = purple
+   Out of stock = red   |   Low stock = orange   |   Expiring soon = electric blue
    --------------------------------------------------------------------- */
 :root {
-  --st-out: #c0303f;
-  --st-out-deep: #8c2732;
-  --st-out-bg: #fdecec;
+  --cyan: #05aff2;
+  --blue-bright: #0511f2;
+  --brand-red: #d90416;
+  --st-out: #d90416;
+  --st-out-deep: #a00310;
+  --st-out-bg: #fdeced;
   --st-low: #d9640f;
   --st-low-deep: #9a4309;
   --st-low-bg: #fff0e2;
-  --st-exp: #7a46c8;
-  --st-exp-deep: #55308f;
-  --st-exp-bg: #f1eafc;
+  --st-exp: #0511f2;
+  --st-exp-deep: #0309a8;
+  --st-exp-bg: #e6e8fe;
 }
 
 /* Stat cards (Alerts, Dashboard) */
@@ -41,9 +44,9 @@
 .panel.out { border-top: 3px solid var(--st-out); }
 .panel.low { border-top: 3px solid var(--st-low); }
 .panel.exp { border-top: 3px solid var(--st-exp); }
-.status-pill.out { color: var(--st-out-deep); background: var(--st-out-bg); border-color: #f3c4c4; }
+.status-pill.out { color: var(--st-out-deep); background: var(--st-out-bg); border-color: #f3c4c8; }
 .status-pill.low { color: var(--st-low-deep); background: var(--st-low-bg); border-color: #f6d2b0; }
-.status-pill.exp { color: var(--st-exp-deep); background: var(--st-exp-bg); border-color: #dccbf3; }
+.status-pill.exp { color: var(--st-exp-deep); background: var(--st-exp-bg); border-color: #c9ccfb; }
 
 /* Inventory list stock dots */
 .stock-pill.low::before { background: var(--st-low); }
@@ -79,18 +82,15 @@
 .nav-badge.exp { background: var(--st-exp); }
 .nav-item.active .nav-badge { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9); }
 
-/* POS: items to sell first */
-.prod-card.sellfirst { border-color: var(--st-exp); box-shadow: 0 0 0 1px var(--st-exp) inset; }
-.exp-tag {
-  display: inline-block;
-  align-self: flex-start;
-  margin: 0 0 8px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--st-exp-deep);
-  background: var(--st-exp-bg);
-}
 .prod-card .low { color: var(--st-low); }
 .prod-card .out { color: var(--st-out); }
+
+/* Dark theme: keep the logo readable on a white tile */
+:root[data-theme="dark"] .brand-logo img {
+  background: #fff;
+  border-radius: 10px;
+  padding: 4px 10px;
+}
+
+/* Dark theme: a brighter blue so links and outlines stay readable on near-black */
+:root[data-theme="dark"] { --blue: #2f6df0; }

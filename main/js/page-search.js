@@ -16,7 +16,7 @@
   var style = document.createElement("style");
   style.textContent =
     ".ps-hide{display:none !important}" +
-    ".ps-empty{padding:28px;text-align:center;color:#6b7280;font-size:14px;background:#fff;border:1px dashed #d1d5db;border-radius:14px;margin-bottom:16px}";
+    ".ps-empty{padding:28px;text-align:center;color:#6b7280;font-size:14px;background:#fff;border:1px dashed #d3d5d9;border-radius:14px;margin-bottom:16px}";
   document.head.appendChild(style);
 
   var empty = document.createElement("div");

@@ -118,7 +118,7 @@ function render() {
           '<span class="detail-cell">' +
           MynelleStore.formatCurrency(p.price) +
           "</span>" +
-          '<span><a class="detail-action-btn" href="inventory.html">View</a></span>';
+          '<span><a class="detail-action-btn" href="' + Orders.restockHref(p.id) + '">' + Orders.restockLabel(p.id) + "</a></span>";
         return row.outerHTML;
       })
       .join("");

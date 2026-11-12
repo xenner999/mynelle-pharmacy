@@ -20,6 +20,10 @@ function csvCell(v) {
   return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
 }
 
+// Printing shows every row, not just the current page.
+document.addEventListener("mynelle:beforeprint", function () { state.size = 1e9; state.page = 0; render(); });
+document.addEventListener("mynelle:afterprint", function () { state.size = 100; render(); });
+
 function render() {
   var rows = SalesView.filter(state.period, state.query, state.sort);
   summaryEl.innerHTML = SalesView.summaryHtml(rows);

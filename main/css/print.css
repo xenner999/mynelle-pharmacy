@@ -1,0 +1,113 @@
+/* ===== Print buttons (on screen) ===== */
+.mr-print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text, #0d0d0d);
+  background: var(--card, #fff);
+  border: 1px solid var(--border, #d3dae9);
+  margin-left: 8px;
+  white-space: nowrap;
+}
+.mr-print-btn:hover { background: rgba(131, 137, 149, 0.14); }
+.mr-print-btn svg { flex: none; }
+
+.mr-export-btn {
+  display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 12.5px; font-weight: 600;
+  padding: 6px 12px; border-radius: 8px; cursor: pointer; white-space: nowrap;
+  color: var(--blue, #0442bf); background: var(--card, #fff); border: 1px solid var(--blue, #0442bf);
+}
+.mr-export-btn:hover { background: rgba(4, 66, 191, 0.08); }
+.mr-export-btn svg { flex: none; }
+.mr-tools { display: inline-flex; align-items: center; gap: 8px; margin-left: 8px; }
+.mr-tools .mr-print-btn { margin-left: 0; }
+/* a bar sitting above a table when its panel has no header row */
+.mr-tools.mr-tools-bar { display: flex; justify-content: flex-end; margin: 0 0 10px; }
+.mr-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 600;
+  background: #0d0d0d; color: #fff; padding: 10px 16px; border-radius: 10px; font-size: 13px;
+}
+
+.mr-print-header { display: none; }
+
+/* ===== Printing ===== */
+@media print {
+  @page { margin: 12mm; }
+
+  body.mr-printing,
+  body.mr-printing .app,
+  body.mr-printing main {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body.mr-printing .content {
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* chrome we never want on paper */
+  body.mr-printing .sidebar,
+  body.mr-printing header.topbar,
+  body.mr-printing .mr-print-btn,
+  body.mr-printing .mr-export-btn,
+  body.mr-printing .mr-tools,
+  body.mr-printing .mr-toast,
+  body.mr-printing .panel-head-actions,
+  body.mr-printing .panel-head-right,
+  body.mr-printing .detail-actions,
+  body.mr-printing .detail-back,
+  body.mr-printing .pager,
+  body.mr-printing .pager-actions,
+  body.mr-printing .modal-overlay,
+  body.mr-printing .mc-overlay,
+  body.mr-printing #toast,
+  body.mr-printing .toast,
+  body.mr-printing .nav-badges,
+  body.mr-printing button,
+  body.mr-printing select,
+  body.mr-printing input,
+  body.mr-printing textarea,
+  body.mr-printing .mr-np {
+    display: none !important;
+  }
+
+  /* keep records readable */
+  body.mr-printing .panel,
+  body.mr-printing .stat-card,
+  body.mr-printing .table-wrap {
+    box-shadow: none !important;
+    break-inside: auto;
+  }
+  body.mr-printing .panel { border: 1px solid #bbb !important; margin-bottom: 12px; background: #fff !important; }
+  body.mr-printing .stat-card { color: #000 !important; background: #fff !important; border: 1px solid #bbb !important; }
+  body.mr-printing .table-row,
+  body.mr-printing tr { break-inside: avoid; }
+  body.mr-printing .table-head { font-weight: 700; }
+  body.mr-printing * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body.mr-printing a { color: #000 !important; text-decoration: none !important; }
+
+  /* report heading */
+  body.mr-printing .mr-print-header {
+    display: block !important;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #000;
+    color: #000;
+    font-family: Inter, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .mr-print-header .mr-ph-name { font-size: 18px; font-weight: 800; }
+  .mr-print-header .mr-ph-line { font-size: 11px; color: #444; margin-top: 2px; }
+  .mr-print-header .mr-ph-title { font-size: 15px; font-weight: 700; margin-top: 8px; }
+  .mr-print-header .mr-ph-meta { font-size: 11px; color: #444; margin-top: 2px; }
+}

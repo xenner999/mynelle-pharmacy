@@ -208,41 +208,6 @@ document.querySelector('[data-save="pricing"]').addEventListener("click", functi
 });
 
 // ---------------------------------------------------------------------
-// Security: change the admin access code
-// (enter current code -> enter new code -> confirm new code)
-// ---------------------------------------------------------------------
-var secErrorEl = document.getElementById("secError");
-var secSaveBtn = document.getElementById("secSaveBtn");
-
-secSaveBtn.addEventListener("click", async function () {
-  var currentCode = document.getElementById("secCurrentCode").value;
-  var newCode = document.getElementById("secNewCode").value;
-  var confirmCode = document.getElementById("secConfirmCode").value;
-
-  secErrorEl.textContent = "";
-  secSaveBtn.disabled = true;
-  secSaveBtn.textContent = "Updating...";
-
-  try {
-    await MynelleAuth.changeAccessCode({
-      currentCode: currentCode,
-      newCode: newCode,
-      confirmCode: confirmCode,
-    });
-    document.getElementById("secCurrentCode").value = "";
-    document.getElementById("secNewCode").value = "";
-    document.getElementById("secConfirmCode").value = "";
-    flashSaved("security");
-    showToast("Admin access code updated");
-  } catch (err) {
-    secErrorEl.textContent = err.message || "Could not update the access code.";
-  } finally {
-    secSaveBtn.disabled = false;
-    secSaveBtn.textContent = "Update access code";
-  }
-});
-
-// ---------------------------------------------------------------------
 // Data: export / import / sample data / clear
 // ---------------------------------------------------------------------
 document.getElementById("btnExport").addEventListener("click", function () {
@@ -314,8 +279,36 @@ document.getElementById("btnSample").addEventListener("click", function () {
     tone: "danger",
   }).then(function (yes) {
     if (!yes) return;
-    MynelleStore.seedSampleData();
+    var saved = 0;
+    try {
+      MynelleStore.seedSampleData();
+      saved = MynelleStore.getProducts().length;
+    } catch (err) {
+      saved = 0;
+    }
+    if (!saved) {
+      // The seed ran but nothing was kept: the browser is blocking site storage
+      // (private/incognito mode, an in-app browser, or storage switched off).
+      MynelleConfirm.ask({
+        title: "Couldn't save the sample data",
+        message:
+          "Your browser isn't letting this site store data. Open the site in a normal (not private) tab in Chrome, Edge, Safari or Firefox, make sure cookies/site data are allowed, then try again.",
+        confirmText: "OK",
+        cancelText: "Close",
+        tone: "danger",
+      });
+      return;
+    }
     showToast("Sample data loaded");
+    MynelleConfirm.ask({
+      title: "Sample data loaded",
+      message: saved + " products and their sales history are ready to explore.",
+      confirmText: "View inventory",
+      cancelText: "Stay here",
+      tone: "success",
+    }).then(function (go) {
+      if (go) window.location.href = "inventory.html";
+    });
   });
 });
 

@@ -24,7 +24,7 @@ var legendSafe = document.getElementById("legendSafe");
 var legendExpiringSoon = document.getElementById("legendExpiringSoon");
 var categoryLegend = document.getElementById("categoryLegend");
 
-var CATEGORY_COLORS = ["#2c4a8c", "#0e7c86", "#b4740e", "#7a2036", "#94a3b8"];
+var CATEGORY_COLORS = ["#0442bf", "#05aff2", "#d90416", "#0d0d0d", "#9ea3ad"]; // logo palette
 
 function drawDonut(wrapEl, segments, total, centerValue, centerLabel) {
   if (!wrapEl) return;
@@ -126,9 +126,9 @@ function render() {
   drawDonut(
     document.getElementById("healthDonutWrap"),
     [
-      { value: healthyCount, color: "#4f83d6" },
-      { value: lowCount, color: "#1b2447" },
-      { value: outCount, color: "#b3323f" },
+      { value: healthyCount, color: "#22a06b" },
+      { value: lowCount, color: "#d9640f" },
+      { value: outCount, color: "#d90416" },
     ],
     all.length,
     all.length,
@@ -148,8 +148,8 @@ function render() {
   drawDonut(
     document.getElementById("shelfDonutWrap"),
     [
-      { value: safeCount, color: "#4f83d6" },
-      { value: expiringCount, color: "#b4740e" },
+      { value: safeCount, color: "#22a06b" },
+      { value: expiringCount, color: "#0511f2" },
     ],
     all.length,
     expiringCount,

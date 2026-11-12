@@ -13,7 +13,7 @@ function esc(s) {
 function emptyMarkup(title) {
   return (
     '<div class="chart-empty">' +
-    '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C7CCE0" ' +
+    '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d0d2d7" ' +
     'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
     '<polyline points="3 17 9 11 13 15 21 6"/><polyline points="14 6 21 6 21 13"/></svg>' +
     '<p class="title">' + title + "</p></div>"

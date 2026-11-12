@@ -6,11 +6,14 @@
 }
 
 :root {
-  --red: #b3323f;
-  --red-deep: #8c2732;
+  --cyan: #05aff2;
+  --blue-bright: #0511f2;
+  --brand-red: #d90416;
+  --red: #d90416;
+  --red-deep: #a00310;
 }
 :root[data-theme="dark"] {
-  --red-deep: #e2727e;
+  --red-deep: #f75d6a;
 }
 
 .detail-back {
@@ -61,7 +64,7 @@
   flex-direction: column;
   justify-content: space-between;
   color: #fff;
-  box-shadow: var(--shadow-sm, 0 1px 2px rgba(20, 24, 45, 0.06));
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(17, 17, 17, 0.06));
 }
 .detail-stat.tone-red {
   background: var(--red);

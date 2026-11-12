@@ -2,26 +2,21 @@
 //
 // HOW THIS WORKS
 // ----------------------------------------------------------------------
-// Every function here (registerAdmin, login, logout, getSession) tries the
+// Every function here (login, logout, getSession, ...) tries the
 // real backend first, at the endpoints listed below. If that backend
 // doesn't exist yet (no server, 404, network error), it automatically
 // falls back to a localStorage simulation so the app keeps working today.
 //
 // Once you connect a database, just stand up these endpoints on your
-// server. You will NOT need to change Login.js, Register.js, or this
+// server. You will NOT need to change Login.js or this
 // file — the fetch calls are already wired in and will start being used
 // automatically the moment they stop 404'ing / failing.
 //
-//   POST /api/auth/register   { fullName, username, email, password, accessCode }
-//        -> 201 { id, fullName, username, email, role }
 //   POST /api/auth/login      { identifier, password }
 //        -> 200 { id, fullName, username, email, role, token? }
-//   POST /api/auth/access-code { currentCode, newCode }
-//        -> 200 (change the admin setup code server-side too, if you keep
-//           one there — see Settings -> Security in the app)
 //   POST /api/auth/logout     (optional, only needed for server-side sessions)
 //
-//   Staff/cashier accounts (Profile -> Manage accounts):
+//   Staff accounts - admin and cashier (Profile -> Manage accounts):
 //   GET    /api/accounts          -> 200 [ { id, fullName, username, email,
 //                                            role, status, createdAt } ]
 //   POST   /api/accounts          { fullName, username, email, role, password }
@@ -41,14 +36,21 @@
 var MynelleAuth = (function () {
   var ACCOUNTS_KEY = "mynelle_accounts";
   var SESSION_KEY = "mynelle_session";
-  var ACCESS_CODE_KEY = "mynelle_access_code_hash";
 
-  // Starting value for the admin access code, used only the very first
-  // time the app runs (before anyone has changed it from Settings ->
-  // Security). Change it here if you want a different out-of-the-box
-  // default, but the real way admins are meant to rotate it is the
-  // Settings page, not this file.
-  var DEFAULT_ACCESS_CODE = "MYNELLE-ADMIN-2025";
+  // ---------- first admin account (created by the developer) ----------
+  //
+  // There is no public registration. The very first time the app runs on a
+  // browser with no admin account, this one is created automatically so
+  // someone can sign in. That admin then creates every other admin and
+  // cashier from Profile -> Manage accounts. Change this password right
+  // after the first login (Profile -> My account).
+  var SEED_ADMIN = {
+    id: "ADM-0001",
+    fullName: "System Administrator",
+    username: "admin",
+    email: "admin@mynelles-pharmacy.local",
+    password: "Mynelle@2026",
+  };
 
   // ---------- helpers ----------
 
@@ -117,73 +119,6 @@ var MynelleAuth = (function () {
     });
   }
 
-  // ---------- admin access code (the "auth" gate for Register.html) ----------
-  //
-  // Lazily initialized on first use so existing installs still work: if
-  // nothing has been saved yet, it hashes DEFAULT_ACCESS_CODE and stores
-  // that hash. From then on, Settings -> Security can change it and this
-  // stored hash is always the source of truth (never the constant above).
-
-  async function getAccessCodeHash() {
-    var stored = null;
-    try {
-      stored = localStorage.getItem(ACCESS_CODE_KEY);
-    } catch (e) {
-      /* storage unavailable */
-    }
-    if (stored) return stored;
-
-    var initial = await sha256(DEFAULT_ACCESS_CODE);
-    try {
-      localStorage.setItem(ACCESS_CODE_KEY, initial);
-    } catch (e) {
-      /* storage unavailable */
-    }
-    return initial;
-  }
-
-  async function verifyAccessCode(code) {
-    var hash = await sha256(String(code || ""));
-    var stored = await getAccessCodeHash();
-    return hash === stored;
-  }
-
-  async function changeAccessCode(payload) {
-    var currentCode = payload.currentCode;
-    var newCode = payload.newCode;
-    var confirmCode = payload.confirmCode;
-
-    if (!currentCode || !newCode || !confirmCode) {
-      throw new Error("Please fill in every field.");
-    }
-    if (newCode.length < 8) {
-      throw new Error("New access code must be at least 8 characters.");
-    }
-    if (newCode !== confirmCode) {
-      throw new Error("New access code and confirmation do not match.");
-    }
-
-    var ok = await verifyAccessCode(currentCode);
-    if (!ok) {
-      throw new Error("Current access code is incorrect.");
-    }
-
-    var result = await callApi("/api/auth/access-code", {
-      currentCode: currentCode,
-      newCode: newCode,
-    });
-
-    var newHash = await sha256(newCode);
-    try {
-      localStorage.setItem(ACCESS_CODE_KEY, newHash);
-    } catch (e) {
-      /* storage unavailable — local change won't persist, but backend
-         (if connected) already has it */
-    }
-
-    return true;
-  }
-
   // Distinguishes "no backend yet, use local fallback" from "backend
   // exists but returned an actual error the user should see".
   // GitHub Pages (and any plain static host) has no /api, so skip the backend
@@ -235,42 +170,31 @@ var MynelleAuth = (function () {
 
   // ---------- local (no-database-yet) fallback implementations ----------
 
-  async function localRegister(payload) {
+  // Creates the developer's first admin if the account list has no admin yet.
+  async function ensureSeedAdmin() {
     var accounts = getAccounts();
-    var username = payload.username.trim();
-    var email = payload.email.trim();
-
-    var usernameTaken = accounts.some(function (a) {
-      return a.username.toLowerCase() === username.toLowerCase();
+    var hasAdmin = accounts.some(function (a) { return a.role === "admin"; });
+    var hasSeedName = accounts.some(function (a) {
+      return a.username.toLowerCase() === SEED_ADMIN.username;
     });
-    if (usernameTaken) throw new Error("That username is already taken.");
-
-    var emailTaken = accounts.some(function (a) {
-      return a.email.toLowerCase() === email.toLowerCase();
-    });
-    if (emailTaken) throw new Error("An account with that email already exists.");
-
-    if (!(await verifyAccessCode(payload.accessCode))) {
-      throw new Error("Invalid admin access code.");
-    }
-
-    var passwordHash = await sha256(payload.password);
-    var account = {
-      id: "ADM-" + Date.now(),
-      fullName: payload.fullName.trim(),
-      username: username,
-      email: email,
-      passwordHash: passwordHash,
+    if (hasAdmin || hasSeedName) return;
+    var taken = accounts.some(function (a) { return a.id === SEED_ADMIN.id; });
+    accounts.push({
+      id: taken ? nextStaffId(accounts, "admin") : SEED_ADMIN.id,
+      fullName: SEED_ADMIN.fullName,
+      username: SEED_ADMIN.username,
+      email: SEED_ADMIN.email,
+      passwordHash: await sha256(SEED_ADMIN.password),
       role: "admin",
+      status: "active",
+      hourlyRate: 0,
       createdAt: new Date().toISOString(),
-    };
-
-    accounts.push(account);
+    });
     saveAccounts(accounts);
-    return publicAccount(account);
   }
 
   async function localLogin(payload) {
+    await ensureSeedAdmin();
     var account = findAccount(payload.identifier);
     if (!account) throw new Error("Invalid username/email or password.");
 
@@ -311,10 +235,13 @@ var MynelleAuth = (function () {
 
   function nextStaffId(accounts, role) {
     var prefix = role === "admin" ? "ADM" : role === "pharmacist" ? "PHM" : "CSH";
-    var used = accounts.filter(function (a) {
-      return String(a.id).indexOf(prefix + "-") === 0;
-    }).length;
-    return prefix + "-" + String(used + 1).padStart(4, "0");
+    var max = 0;
+    accounts.forEach(function (a) {
+      if (String(a.id).indexOf(prefix + "-") !== 0) return;
+      var n = parseInt(String(a.id).slice(prefix.length + 1), 10);
+      if (n > max) max = n;
+    });
+    return prefix + "-" + String(max + 1).padStart(4, "0");
   }
 
   function validateStaff(payload, accounts, ignoreId) {
@@ -360,6 +287,7 @@ var MynelleAuth = (function () {
     } catch (e) {
       /* no backend yet — fall through to local */
     }
+    await ensureSeedAdmin();
     return getAccounts().map(publicAccount);
   }
 
@@ -445,7 +373,16 @@ var MynelleAuth = (function () {
     }
 
     if (patch.status !== undefined) {
-      account.status = normalizeStatus(patch.status);
+      var newStatus = normalizeStatus(patch.status);
+      if (account.role === "admin" && newStatus !== "active") {
+        var otherActive = accounts.some(function (a) {
+          return a.id !== id && a.role === "admin" && normalizeStatus(a.status) === "active";
+        });
+        if (!otherActive) {
+          throw new Error("You can't deactivate the last active admin account.");
+        }
+      }
+      account.status = newStatus;
     }
     if (patch.hourlyRate !== undefined) {
       account.hourlyRate = Math.max(0, Number(patch.hourlyRate) || 0);
@@ -553,23 +490,6 @@ var MynelleAuth = (function () {
 
   // ---------- public API (tries backend, falls back to local) ----------
 
-  async function registerAdmin(payload) {
-    var result = await callApi("/api/auth/register", {
-      fullName: payload.fullName,
-      username: payload.username,
-      email: payload.email,
-      password: payload.password,
-      accessCode: payload.accessCode,
-    });
-
-    var account = result.backendAvailable
-      ? publicAccount(result.data)
-      : await localRegister(payload);
-
-    startSession(account, result.backendAvailable);
-    return account;
-  }
-
   async function login(payload) {
     var result = await callApi("/api/auth/login", {
       identifier: payload.identifier,
@@ -617,15 +537,14 @@ var MynelleAuth = (function () {
   }
 
   return {
-    registerAdmin: registerAdmin,
     login: login,
     logout: logout,
     getSession: getSession,
-    changeAccessCode: changeAccessCode,
     verifyCashier: verifyCashier,
     hasCashiers: hasCashiers,
     changeOwnPassword: changeOwnPassword,
     listStaff: listStaff,
+    nextStaffId: nextStaffId,
     createStaff: createStaff,
     updateStaff: updateStaff,
     deleteStaff: deleteStaff,
@@ -633,6 +552,5 @@ var MynelleAuth = (function () {
     STATUSES: STATUSES,
     ACCOUNTS_KEY: ACCOUNTS_KEY,
     SESSION_KEY: SESSION_KEY,
-    ACCESS_CODE_KEY: ACCESS_CODE_KEY,
   };
 })();

@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="../css/responsive.css" />
       <link rel="stylesheet" href="../../assets/uicons/uicons-regular-rounded.css" />
       <link rel="stylesheet" href="../css/stock-status.css" />
+      <link rel="stylesheet" href="../css/print.css" />
   </head>
   <body>
     <div class="app">
@@ -89,6 +90,14 @@
             </svg>
             Analytics
           </a>
+          <a class="nav-item" href="orders.html" data-key="orders">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            Orders
+          </a>
           <a class="nav-item" href="alerts.html" data-key="alerts">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
@@ -140,33 +149,18 @@
           </div>
           <div class="an-toolbar"><div id="periodTabs"></div></div>
 
-          <div class="kpi-grid">
-            <a class="kpi tone-blue" href="sales-analysis.html" data-period-link="sales-analysis.html">
-              <span class="kpi-label">Revenue</span>
-              <span class="kpi-value" id="kRevenueValue"></span>
-              <span class="kpi-sub" id="kRevenueSub"></span>
-              <span class="kpi-spark" id="kRevenueSpark"></span>
-            </a>
-            <a class="kpi tone-green" href="sales-all.html" data-period-link="sales-all.html">
-              <span class="kpi-label">Transactions</span>
-              <span class="kpi-value" id="kTxnValue"></span>
-              <span class="kpi-sub" id="kTxnSub"></span>
-              <span class="kpi-spark" id="kTxnSpark"></span>
-            </a>
-            <a class="kpi tone-teal" href="sales-all.html" data-period-link="sales-all.html" data-extra="sort=highest">
-              <span class="kpi-label">Average sale</span>
-              <span class="kpi-value" id="kAvgValue"></span>
-              <span class="kpi-sub" id="kAvgSub"></span>
-              <span class="kpi-spark" id="kAvgSpark"></span>
-            </a>
+          <div class="panel an-block">
+            <div class="an-panel-head"><h2 class="an-panel-title">Highlights</h2></div>
+            <div id="insHighlights"></div>
+          </div>
+
+          <div class="kpi-grid five">
             <a class="kpi tone-blue" href="inventory-valuation.html">
               <span class="kpi-label">Stock value</span>
               <span class="kpi-value" id="kValueValue"></span>
               <span class="kpi-sub" id="kValueSub"></span>
               <span class="kpi-spark" id="kValueSpark"></span>
             </a>
-          </div>
-          <div class="kpi-grid">
             <a class="kpi tone-blue warn" href="low-stock.html">
               <span class="kpi-label">Low stock</span>
               <span class="kpi-value" id="kLowValue"></span>
@@ -194,34 +188,6 @@
           </div>
 
           <div class="an-grid">
-            <div class="panel span-2">
-              <div class="an-panel-head">
-                <h2 class="an-panel-title" id="trendTitle">Revenue</h2>
-                <a class="panel-link" href="sales-analysis.html" data-period-link="sales-analysis.html">Details</a>
-              </div>
-              <div id="trendChart"></div>
-            </div>
-            <div class="panel">
-              <div class="an-panel-head">
-                <h2 class="an-panel-title">Payment methods</h2>
-                <a class="panel-link" href="payment-analysis.html" data-period-link="payment-analysis.html">Details</a>
-              </div>
-              <div id="payChart"></div>
-            </div>
-            <div class="panel">
-              <div class="an-panel-head">
-                <h2 class="an-panel-title">Top products</h2>
-                <a class="panel-link" href="product-performance.html" data-period-link="product-performance.html">Details</a>
-              </div>
-              <div id="topBars"></div>
-            </div>
-            <div class="panel">
-              <div class="an-panel-head">
-                <h2 class="an-panel-title">Revenue by category</h2>
-                <a class="panel-link" href="category-analysis.html" data-period-link="category-analysis.html">Details</a>
-              </div>
-              <div id="catDonut"></div>
-            </div>
             <div class="panel">
               <div class="an-panel-head">
                 <h2 class="an-panel-title">Stock levels</h2>
@@ -236,20 +202,6 @@
               </div>
               <div id="expiryChart"></div>
             </div>
-            <div class="panel">
-              <div class="an-panel-head">
-                <h2 class="an-panel-title">Revenue by hour of day</h2>
-                <a class="panel-link" href="sales-analysis.html" data-period-link="sales-analysis.html">Details</a>
-              </div>
-              <div id="hourChart"></div>
-            </div>
-            <div class="panel">
-              <div class="an-panel-head">
-                <h2 class="an-panel-title">Revenue by day of week</h2>
-                <a class="panel-link" href="sales-analysis.html" data-period-link="sales-analysis.html">Details</a>
-              </div>
-              <div id="weekdayChart"></div>
-            </div>
             <div class="panel span-2">
               <div class="an-panel-head">
                 <h2 class="an-panel-title">Closest to running out</h2>
@@ -257,6 +209,27 @@
               </div>
               <div id="restockBars"></div>
             </div>
+          </div>
+
+
+          <div class="panel an-block">
+            <div class="an-panel-head"><h2 class="an-panel-title">What changed</h2></div>
+            <div id="insWhy"></div>
+          </div>
+
+          <div class="panel an-block">
+            <div class="an-panel-head"><h2 class="an-panel-title">Next 7 days</h2></div>
+            <div id="insForecast"></div>
+          </div>
+
+          <div class="panel an-block">
+            <div class="an-panel-head"><h2 class="an-panel-title">Stock and expiry outlook</h2></div>
+            <div id="insRisks"></div>
+          </div>
+
+          <div class="panel an-block" id="actions">
+            <div class="an-panel-head"><h2 class="an-panel-title">Recommended actions</h2></div>
+            <div id="insActions"></div>
           </div>
 
           <h2 class="an-panel-title" style="margin:6px 0 4px">All analysis</h2>
@@ -280,16 +253,20 @@
     <script src="../js/auth-store.js"></script>
     <script src="../js/guard.js"></script>
     <script src="../js/settings-store.js"></script>
+    <script src="../js/orders-store.js"></script>
     <script src="../js/notifications.js"></script>
     <script src="../js/profile-menu.js"></script>
     <script src="../js/nav-toggle.js"></script>
     <script src="../js/page-search.js" data-placeholder="Search analytics"></script>
     <script src="../js/analytics-lib.js"></script>
+    <script src="../js/inventory-charts.js"></script>
+    <script src="../js/insights.js"></script>
     <script src="../js/analytics.js"></script>
       <script src="../js/back-button.js"></script>
   <script src="../js/stock-badges.js"></script>
 <script src="../js/ui-confirm.js"></script>
 <script src="../js/confirm-hooks.js"></script>
+<script src="../js/print-records.js"></script>
 <script src="../js/ui-assist.js"></script>
 </body>
 </html>

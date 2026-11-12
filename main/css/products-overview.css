@@ -6,11 +6,14 @@
 }
 
 :root {
-  --red: #b3323f;
-  --red-deep: #8c2732;
+  --cyan: #05aff2;
+  --blue-bright: #0511f2;
+  --brand-red: #d90416;
+  --red: #d90416;
+  --red-deep: #a00310;
 }
 :root[data-theme="dark"] {
-  --red-deep: #e2727e;
+  --red-deep: #f75d6a;
 }
 
 .overview-page-head {

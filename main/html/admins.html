@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem("mynelle_settings");
+          var g = (raw && JSON.parse(raw).general) || {};
+          document.documentElement.setAttribute("data-theme", g.theme || "light");
+          document.documentElement.setAttribute("data-density", g.density || "comfortable");
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mynelle's Pharmacy — Admin accounts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/accounts.css" />
+    <link rel="stylesheet" href="../css/back-button.css" />
+    <link rel="stylesheet" href="../css/responsive.css" />
+      <link rel="stylesheet" href="../../assets/uicons/uicons-regular-rounded.css" />
+      <link rel="stylesheet" href="../css/stock-status.css" />
+      <link rel="stylesheet" href="../css/print.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <a class="brand" href="dashboard.html" aria-label="Go to dashboard">
+          <div class="brand-logo">
+            <img src="../../assets/logooo.png" alt="Mynelle's Pharmacy logo" />
+          </div>
+        </a>
+
+        <nav class="side-nav" id="sideNav">
+          <a class="nav-item" href="dashboard.html" data-key="dashboard">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="9" />
+              <rect x="14" y="3" width="7" height="5" />
+              <rect x="14" y="12" width="7" height="9" />
+              <rect x="3" y="16" width="7" height="5" />
+            </svg>
+            Dashboard
+          </a>
+          <a class="nav-item" href="inventory.html" data-key="inventory">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="8" y="2" width="8" height="4" rx="1" />
+              <path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3" />
+              <path d="M9 12h6M9 16h6" />
+            </svg>
+            Inventory
+          </a>
+          <a class="nav-item" href="sales.html" data-key="sales">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 17 9 11 13 15 21 6" />
+              <polyline points="14 6 21 6 21 13" />
+            </svg>
+            Sales
+          </a>
+          <a class="nav-item" href="reports.html" data-key="reports">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="M9 13h6M9 17h6" />
+            </svg>
+            Reports
+          </a>
+          <a class="nav-item" href="analytics.html" data-key="analytics">
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 3v18h18" />
+              <path d="M7 15v3M12 10v8M17 6v12" />
+            </svg>
+            Analytics
+          </a>
+          <a class="nav-item" href="orders.html" data-key="orders">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            Orders
+          </a>
+          <a class="nav-item" href="alerts.html" data-key="alerts">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+            </svg>
+            Alerts
+          </a>
+        </nav>
+
+      </aside>
+
+      <!-- Main -->
+      <main>
+        <header class="topbar">
+          <div class="search-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" placeholder="Search products, sales, records..." />
+          </div>
+          <div class="topbar-actions">
+            <a class="icon-btn" aria-label="Settings" href="settings.html">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </a>
+            <button class="icon-btn" aria-label="Notifications">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+              </svg>
+            </button>
+            <button class="icon-btn active" aria-label="Profile">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+
+        <div class="content">
+          <div class="panel" id="adminPanel">
+            <div class="panel-head">
+              <div class="panel-head-title">
+                <h2>Admin accounts</h2>
+              </div>
+              <div class="panel-head-actions">
+                <div class="acc-search"><input type="text" id="adSearch" placeholder="Search admins..." autocomplete="off" /></div>
+                <button class="add-acc-btn" id="addAdminBtn" type="button">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Add admin
+                </button>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <div class="table-head">
+                <span>Admin ID</span>
+                <span>Name</span>
+                <span>Username</span>
+                <span>Email</span>
+                <span>Role</span>
+                <span>Status</span>
+                <span>Action</span>
+              </div>
+              <div id="adminRows"></div>
+              <div class="empty-state" id="adminEmpty" hidden><p class="title">No admins found</p></div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <!-- Add / edit account modal -->
+    <div class="modal-overlay" id="accountOverlay">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle">
+        <div class="modal-head">
+          <h3 id="accountModalTitle">Add admin account</h3>
+          <button class="modal-close" id="accountClose" type="button" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <form id="accountForm" class="modal-form" novalidate>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="fEmployeeId">Employee ID</label>
+              <input type="text" id="fEmployeeId" class="settings-input" readonly />
+            </div>
+            <div class="form-field" id="fStatusField" style="display: none">
+              <label for="fStatus">Employment status</label>
+              <select id="fStatus" class="settings-select">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="suspended">Suspended</option>
+                <option value="resigned">Resigned</option>
+                <option value="retired">Retired</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="fFullName">Full name *</label>
+            <input type="text" id="fFullName" class="settings-input" placeholder="e.g. Maria Santos" autocomplete="off" />
+            <span class="field-error" id="errFullName"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="fUsername">Username *</label>
+            <input type="text" id="fUsername" class="settings-input" placeholder="e.g. jdelacruz" autocomplete="off" />
+            <span class="field-error" id="errUsername"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="fEmail">Email *</label>
+            <input type="email" id="fEmail" class="settings-input" placeholder="name@example.com" autocomplete="off" />
+            <span class="field-error" id="errEmail"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="fPassword" id="fPasswordLabel">Password (at least 8 characters) *</label>
+              <input type="password" id="fPassword" class="settings-input" autocomplete="new-password" />
+              <span class="field-error" id="errPassword"></span>
+            </div>
+            <div class="form-field">
+              <label for="fConfirm" id="fConfirmLabel">Confirm password *</label>
+              <input type="password" id="fConfirm" class="settings-input" autocomplete="new-password" />
+              <span class="field-error" id="errConfirm"></span>
+            </div>
+          </div>
+
+          <div class="settings-error" id="accountError" role="alert"></div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" id="accountCancel">Cancel</button>
+            <button type="submit" class="btn-primary" id="accountSubmit">Add account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Deactivate / reactivate confirm -->
+    <div class="modal-overlay" id="statusOverlay">
+      <div class="modal-card confirm-card" role="dialog" aria-modal="true" aria-labelledby="statusTitle">
+        <div class="modal-head">
+          <h3 id="statusTitle">Deactivate account</h3>
+          <button class="modal-close" id="statusClose" type="button" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-form">
+          <p class="confirm-text" id="statusText"></p>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" id="statusCancel">Cancel</button>
+            <button type="button" class="btn-danger" id="statusConfirm">Deactivate</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="../js/auth-store.js"></script>
+    <script src="../js/guard.js"></script>
+    <script src="../js/settings-store.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/profile-menu.js"></script>
+    <script src="../js/nav-toggle.js"></script>
+    <script src="../js/admins.js"></script>
+      <script src="../js/back-button.js"></script>
+  <script src="../js/stock-badges.js"></script>
+<script src="../js/ui-confirm.js"></script>
+<script src="../js/confirm-hooks.js"></script>
+<script src="../js/print-records.js"></script>
+<script src="../js/ui-assist.js"></script>
+</body>
+</html>

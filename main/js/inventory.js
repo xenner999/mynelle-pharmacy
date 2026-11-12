@@ -183,7 +183,7 @@ function renderProducts() {
     var empty = document.createElement("div");
     empty.className = "empty-state";
     empty.innerHTML =
-      '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E3E6EE" ' +
+      '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e1e6f0" ' +
       'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
       '<rect x="8" y="2" width="8" height="4" rx="1"/>' +
       '<path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/>' +
@@ -390,7 +390,7 @@ var GENERIC_NAME_SEED = [
   "Povidone-Iodine Solution", "Isotonic Nasal Spray",
 ];
 var BRAND_NAME_SEED = [
-  "Biogesic", "Bioflu", "Neozep", "Decolgen", "Alaxan",
+  "RiteMed", "Biogesic", "Bioflu", "Neozep", "Decolgen", "Alaxan",
   "Medicol", "Ponstan", "Amoxil", "Augmentin", "Zithromax",
   "Virlix", "Claritin", "Benadryl", "Ventolin", "Cozaar",
   "Norvasc", "Glucophage", "Amaryl", "Losec", "Zantac",

@@ -1,27 +1,30 @@
 :root {
+  --cyan: #05aff2;
+  --blue-bright: #0511f2;
+  --brand-red: #d90416;
   --header-h: 86px;
-  --ink: #161b33;
-  --navy-deep: #12172f;
-  --bg: #f3f4f8;
+  --ink: #0d0d0d;
+  --navy-deep: #0d0d0d;
+  --bg: #f2f4f9;
   --card: #ffffff;
-  --border: #e3e6ee;
-  --text: #1b2333;
+  --border: #e1e6f0;
+  --text: #0d0d0d;
   --text-muted: #6b7280;
-  --blue: #2c4a8c;
-  --blue-deep: #1f3564;
+  --blue: #0442bf;
+  --blue-deep: #032f8a;
   --green: #1f7a5c;
   --green-deep: #175e46;
   --gold: #b4740e;
   --gold-deep: #8c5a0a;
-  --navy: #1b2447;
-  --maroon: #7a2036;
-  --maroon-deep: #5e1728;
-  --teal: #0e7c86;
-  --teal-deep: #0b6169;
+  --navy: #0d0d0d;
+  --maroon: #d90416;
+  --maroon-deep: #a00310;
+  --teal: #0580b8;
+  --teal-deep: #04668f;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --shadow-sm: 0 1px 2px rgba(20, 24, 45, 0.06);
-  --shadow-md: 0 6px 20px rgba(20, 24, 45, 0.08);
+  --shadow-sm: 0 1px 2px rgba(17, 17, 17, 0.06);
+  --shadow-md: 0 6px 20px rgba(17, 17, 17, 0.08);
 }
 * {
   box-sizing: border-box;
@@ -111,12 +114,13 @@ nav.side-nav {
 .nav-item.active {
   background: var(--blue);
   color: #fff;
+  box-shadow: inset 4px 0 0 var(--cyan);
 }
 .nav-item.active svg {
   opacity: 1;
 }
 .nav-item:hover:not(.active) {
-  background: rgba(44, 74, 140, 0.08);
+  background: rgba(4, 66, 191, 0.08);
   color: var(--text);
 }
 
@@ -393,7 +397,7 @@ textarea.settings-input {
 }
 
 .settings-error {
-  color: #c0392b;
+  color: #dd0e1f;
   font-size: 13px;
   margin-top: 14px;
   min-height: 16px;
@@ -428,12 +432,12 @@ textarea.settings-input {
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  border: 1px solid var(--red, #d14343);
+  border: 1px solid var(--red, #d90416);
   background: #fff;
-  color: var(--red, #d14343);
+  color: var(--red, #d90416);
 }
 .btn-danger:hover {
-  background: var(--red, #d14343);
+  background: var(--red, #d90416);
   color: #fff;
 }
 
@@ -471,7 +475,7 @@ textarea.settings-input {
 }
 .settings-input.has-error,
 .settings-select.has-error {
-  border-color: var(--red, #d14343);
+  border-color: var(--red, #d90416);
 }
 
 /* ===== Modal ===== */
@@ -479,7 +483,7 @@ textarea.settings-input {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(15, 20, 40, 0.45);
+  background: rgba(12, 12, 12, 0.45);
   align-items: center;
   justify-content: center;
   z-index: 100;
@@ -495,7 +499,7 @@ textarea.settings-input {
   max-width: 440px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 24px 60px rgba(15, 20, 40, 0.35);
+  box-shadow: 0 24px 60px rgba(12, 12, 12, 0.35);
   animation: modal-pop 0.15s ease;
 }
 @keyframes modal-pop {
@@ -558,7 +562,7 @@ textarea.settings-input {
 }
 .field-error {
   font-size: 11px;
-  color: var(--red, #d14343);
+  color: var(--red, #d90416);
   min-height: 14px;
   display: block;
 }
@@ -605,7 +609,7 @@ textarea.settings-input {
   border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  box-shadow: 0 12px 30px rgba(15, 20, 40, 0.25);
+  box-shadow: 0 12px 30px rgba(12, 12, 12, 0.25);
   opacity: 0;
   pointer-events: none;
   transition:
@@ -629,7 +633,7 @@ textarea.settings-input {
   align-items: center;
 }
 .action-icon-btn:hover {
-  color: var(--red, #d14343);
+  color: var(--red, #d90416);
 }
 .stock-pill {
   display: inline-flex;
@@ -647,15 +651,15 @@ textarea.settings-input {
 
 /* ===== Dark theme (Settings → General) ===== */
 :root[data-theme="dark"] {
-  --bg: #0e1428;
-  --card: #171e3a;
-  --border: #2b3358;
-  --text: #e7eaf6;
-  --text-muted: #98a0c4;
-  --blue-deep: #6685d6;
+  --bg: #0d0d0d;
+  --card: #171717;
+  --border: #2e2e2e;
+  --text: #ececec;
+  --text-muted: #a8acb4;
+  --blue-deep: #6f9bf5;
   --gold-deep: #d99a3a;
   --green-deep: #3fae86;
-  --red-deep: #e2727e;
+  --red-deep: #f75d6a;
 }
 :root[data-theme="dark"] body {
   background: var(--bg);
@@ -688,7 +692,7 @@ textarea.settings-input {
   background: rgba(255, 255, 255, 0.06);
 }
 :root[data-theme="dark"] .empty-state svg {
-  stroke: #333c66;
+  stroke: #383838;
 }
 :root[data-theme="dark"] .settings-input,
 :root[data-theme="dark"] .settings-select {

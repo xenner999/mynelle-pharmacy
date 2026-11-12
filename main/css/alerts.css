@@ -1,28 +1,31 @@
 :root {
+  --cyan: #05aff2;
+  --blue-bright: #0511f2;
+  --brand-red: #d90416;
   --header-h: 86px;
-  --ink: #161b33;
-  --navy-deep: #12172f;
-  --bg: #f3f4f8;
+  --ink: #0d0d0d;
+  --navy-deep: #0d0d0d;
+  --bg: #f2f4f9;
   --card: #ffffff;
-  --border: #e3e6ee;
-  --text: #1b2333;
+  --border: #e1e6f0;
+  --text: #0d0d0d;
   --text-muted: #6b7280;
-  --blue: #2c4a8c;
-  --blue-deep: #1f3564;
+  --blue: #0442bf;
+  --blue-deep: #032f8a;
   --gold: #b4740e;
   --gold-deep: #8c5a0a;
-  --red: #b3323f;
-  --red-deep: #8c2732;
-  --navy: #1b2447;
-  --navy2-deep: #12172f;
-  --maroon: #7a2036;
-  --maroon-deep: #5e1728;
-  --teal: #0e7c86;
-  --teal-deep: #0b6169;
+  --red: #d90416;
+  --red-deep: #a00310;
+  --navy: #0d0d0d;
+  --navy2-deep: #000000;
+  --maroon: #d90416;
+  --maroon-deep: #a00310;
+  --teal: #0580b8;
+  --teal-deep: #04668f;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --shadow-sm: 0 1px 2px rgba(20, 24, 45, 0.06);
-  --shadow-md: 0 6px 20px rgba(20, 24, 45, 0.08);
+  --shadow-sm: 0 1px 2px rgba(17, 17, 17, 0.06);
+  --shadow-md: 0 6px 20px rgba(17, 17, 17, 0.08);
 }
 * {
   box-sizing: border-box;
@@ -112,12 +115,13 @@ nav.side-nav {
 .nav-item.active {
   background: var(--blue);
   color: #fff;
+  box-shadow: inset 4px 0 0 var(--cyan);
 }
 .nav-item.active svg {
   opacity: 1;
 }
 .nav-item:hover:not(.active) {
-  background: rgba(44, 74, 140, 0.08);
+  background: rgba(4, 66, 191, 0.08);
   color: var(--text);
 }
 
@@ -216,7 +220,7 @@ header.topbar {
 }
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md, 0 10px 24px rgba(20, 24, 45, 0.18));
+  box-shadow: var(--shadow-md, 0 10px 24px rgba(17, 17, 17, 0.18));
 }
 .stat-card.gold {
   background: var(--gold);
@@ -310,7 +314,7 @@ header.topbar {
   flex-shrink: 0;
 }
 .count-badge {
-  background: #fdecec;
+  background: #fdeced;
   color: var(--red-deep);
   font-size: 11px;
   font-weight: 700;
@@ -397,15 +401,15 @@ header.topbar {
 
 /* ===== Dark theme (Settings → General) ===== */
 :root[data-theme="dark"] {
-  --bg: #0e1428;
-  --card: #171e3a;
-  --border: #2b3358;
-  --text: #e7eaf6;
-  --text-muted: #98a0c4;
-  --blue-deep: #6685d6;
+  --bg: #0d0d0d;
+  --card: #171717;
+  --border: #2e2e2e;
+  --text: #ececec;
+  --text-muted: #a8acb4;
+  --blue-deep: #6f9bf5;
   --gold-deep: #d99a3a;
   --green-deep: #3fae86;
-  --red-deep: #e2727e;
+  --red-deep: #f75d6a;
 }
 :root[data-theme="dark"] body {
   background: var(--bg);
@@ -438,7 +442,7 @@ header.topbar {
   background: rgba(255, 255, 255, 0.06);
 }
 :root[data-theme="dark"] .empty-state svg {
-  stroke: #333c66;
+  stroke: #383838;
 }
 :root[data-theme="dark"] .settings-input,
 :root[data-theme="dark"] .settings-select {

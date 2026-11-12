@@ -1,13 +1,16 @@
 :root {
-  --navy: #1e2a5c;
-  --navy-deep: #12172f;
-  --teal: #0e7c86;
-  --maroon: #7a2036;
-  --ink: #161b33;
-  --text: #1b2333;
+  --cyan: #05aff2;
+  --blue-bright: #0511f2;
+  --brand-red: #d90416;
+  --navy: #0442bf;
+  --navy-deep: #032f8a;
+  --teal: #0580b8;
+  --maroon: #d90416;
+  --ink: #0d0d0d;
+  --text: #0d0d0d;
   --muted: #6b7280;
-  --border: #e3e6ee;
-  --red: #b3323f;
+  --border: #e1e6f0;
+  --red: #d90416;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 }
 
@@ -25,7 +28,13 @@ body {
   min-height: 100vh;
   font-family: var(--font-sans);
   color: var(--text);
-  background: #ffffff;
+  background-color: #f2f4f9;
+  background-image:
+    radial-gradient(900px 520px at 100% 0%, rgba(5, 175, 242, 0.20), transparent 60%),
+    radial-gradient(820px 520px at 0% 100%, rgba(4, 66, 191, 0.12), transparent 60%),
+    radial-gradient(520px 320px at 100% 100%, rgba(217, 4, 22, 0.08), transparent 65%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 /* ===== Split shell ===== */
@@ -39,7 +48,7 @@ body {
 .auth-aside {
   position: relative;
   background:
-    linear-gradient(160deg, rgba(20, 33, 74, 0.9), rgba(12, 21, 52, 0.94) 75%),
+    linear-gradient(160deg, rgba(3, 47, 138, 0.88), rgba(13, 13, 13, 0.95) 78%),
     url("../../assets/bg.jpg") center / cover no-repeat;
   color: #fff;
   display: flex;
@@ -121,7 +130,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 40px 24px;
-  background: #fff;
+  background: transparent;
 }
 
 .logo-space-mobile {
@@ -131,6 +140,11 @@ body {
 .card {
   width: 100%;
   max-width: 380px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 32px;
+  box-shadow: 0 14px 40px rgba(4, 66, 191, 0.12);
 }
 .card.card-wide {
   max-width: 420px;
@@ -174,7 +188,7 @@ input[type="email"] {
   padding: 11px 44px 11px 14px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: #fbfbfd;
+  background: #fbfcfd;
   font-family: inherit;
   font-size: 14px;
   color: var(--ink);
@@ -190,7 +204,8 @@ input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="email"]:focus {
   border-color: var(--navy);
-  box-shadow: 0 0 0 3px rgba(30, 42, 92, 0.12);
+  box-shadow: 0 0 0 3px rgba(5, 17, 242, 0.14);
+  box-shadow: 0 0 0 3px rgba(42, 42, 42, 0.12);
   background: #fff;
 }
 
@@ -241,7 +256,7 @@ input[type="email"]:focus {
   transform: scale(0.99);
 }
 .login-btn:focus-visible {
-  outline: 3px solid var(--teal);
+  outline: 3px solid var(--cyan);
   outline-offset: 2px;
 }
 .login-btn[disabled] {
@@ -262,24 +277,6 @@ input[type="email"]:focus {
   text-decoration: underline;
 }
 .forgot:focus-visible {
-  outline: 2px solid var(--navy);
-  border-radius: 4px;
-}
-
-.register-link {
-  display: block;
-  text-align: center;
-  margin-top: 10px;
-  font-weight: 500;
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 13px;
-}
-.register-link:hover {
-  color: var(--navy);
-  text-decoration: underline;
-}
-.register-link:focus-visible {
   outline: 2px solid var(--navy);
   border-radius: 4px;
 }
@@ -350,8 +347,8 @@ input[type="email"]:focus {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(127, 216, 201, 0.2);
-  border: 1px solid rgba(127, 216, 201, 0.6);
+  background: rgba(127, 189, 216, 0.2);
+  border: 1px solid rgba(127, 189, 216, 0.6);
 }
 .auth-checklist li::after {
   content: "";
@@ -360,13 +357,14 @@ input[type="email"]:focus {
   top: 5px;
   width: 6px;
   height: 10px;
-  border: solid #7fd8c9;
+  border: solid #7fd6f8;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
 
 /* Thin dark line along the top of the login form side */
 .auth-main-login {
-  border-top: 3px solid var(--navy-deep, #0c1534);
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, #0442bf 0%, #05aff2 55%, #d90416 100%) 1;
 }
 

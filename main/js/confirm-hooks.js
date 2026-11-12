@@ -66,12 +66,56 @@
       confirmText: "Save changes",
     };
   });
-  C.guardClick("#secSaveBtn", function () {
+
+  // ---- Inventory: restore, product photo ----
+  C.guardClick('.action-icon-btn[data-action="restore"]', function (btn) {
+    var name = "";
+    if (window.MynelleStore) {
+      var hit = MynelleStore.getAllProducts
+        ? MynelleStore.getAllProducts().filter(function (p) { return p.id === btn.dataset.id; })[0]
+        : null;
+      if (hit) name = hit.name;
+    }
     return {
-      title: "Change the access code?",
-      message: "You'll need the new code the next time you unlock protected areas.",
-      confirmText: "Change code",
-      tone: "danger",
+      title: "Restore this product?",
+      message: "It will show up in inventory and the POS again.",
+      details: [["Product", name]],
+      confirmText: "Restore",
+      tone: "success",
     };
+  });
+  C.guardClick("#picRemove", function () {
+    return { title: "Remove this photo?", message: "The product will go back to having no picture.", confirmText: "Remove photo", tone: "danger" };
+  });
+  C.guardClick(".img-btn[data-remove]", function () {
+    return { title: "Remove this photo?", message: "The product will go back to having no picture.", confirmText: "Remove photo", tone: "danger" };
+  });
+
+  // ---- Notifications ----
+  C.guardClick("#dismissAllBtn", function () {
+    return { title: "Dismiss all shown alerts?", message: "They'll be hidden from Notifications. You can show dismissed alerts again with the checkbox.", confirmText: "Dismiss all" };
+  });
+  C.guardClick('.alert-action-btn[data-action="restore"]', function () {
+    return { title: "Restore this alert?", message: "It will show in your active notifications again.", confirmText: "Restore" };
+  });
+  C.guardClick('.alert-action-btn[data-action="dismiss"]', function () {
+    return { title: "Dismiss this alert?", message: "It will be hidden until you show dismissed alerts.", confirmText: "Dismiss" };
+  });
+
+  // ---- Profile / PIN ----
+  C.guardClick("#meSave", function () {
+    return { title: "Save your profile?", message: "Your name, username and email will be updated.", confirmText: "Save profile", tone: "success" };
+  });
+  C.guardClick("#pwSaveBtn", function () {
+    return { title: "Update your PIN?", message: "You'll use the new PIN the next time you sign in at the till.", confirmText: "Update PIN", tone: "danger" };
+  });
+
+  // ---- POS ----
+  C.guardClick(".rm[data-remove]", function (btn) {
+    var row = btn.closest(".cart-item, .cart-row, li, div");
+    return { title: "Remove this item?", message: "It will be taken out of the current order.", confirmText: "Remove", tone: "danger" };
+  });
+  C.guardClick("#navLogout", function () {
+    return { title: "Sign out of the till?", message: "You'll go back to the Time Tracker. Your shift stays open unless you check out.", confirmText: "Sign out", tone: "danger" };
   });
 })();

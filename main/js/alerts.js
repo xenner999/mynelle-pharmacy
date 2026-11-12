@@ -87,7 +87,7 @@
     var div = document.createElement("div");
     div.className = "empty-state";
     div.innerHTML =
-      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E3E6EE" ' +
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e1e6f0" ' +
       'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
       iconPath +
       "</svg>" +
@@ -150,7 +150,7 @@
         "<span>" + esc(p.name) + "</span>" +
         "<span>" + esc(p.category || "\u2014") + "</span>" +
         '<span><span class="status-pill out">Out of stock</span></span>' +
-        '<span><a class="view-all" href="inventory.html" style="font-size:12px;">Restock</a></span>';
+        '<span><a class="view-all" href="' + Orders.restockHref(p.id) + '" style="font-size:12px;">' + Orders.restockLabel(p.id, "Restock") + "</a></span>";
       wrap.appendChild(row);
     });
   }
@@ -185,7 +185,7 @@
         "<span>" + esc(p.name) + "</span>" +
         "<span>" + remainingLabel + "</span>" +
         "<span><span class=\"status-pill low\">Low stock</span></span>" +
-        '<span><a class="view-all" href="inventory.html" style="font-size:12px;">Restock</a></span>';
+        '<span><a class="view-all" href="' + Orders.restockHref(p.id) + '" style="font-size:12px;">' + Orders.restockLabel(p.id, "Restock") + "</a></span>";
       wrap.appendChild(row);
     });
   }

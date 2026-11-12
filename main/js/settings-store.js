@@ -643,6 +643,7 @@ var MynelleStore = (function () {
       sale.change = Number(extra.change) || 0;
       sale.notes = extra.notes || "";
       sale.cashier = extra.cashier || "";
+      sale.cashierId = extra.cashierId || ""; // lets each cashier see only their own numbers
       sale.source = "pos";
     }
     sale.total = saleTotal(sale);
@@ -853,7 +854,7 @@ var MynelleStore = (function () {
       if (products[i].stock === 0) return;
       for (var k = 0; k < r[9]; k++) pool.push(i);
     });
-    var payments = ["Cash", "Cash", "Cash", "Cash", "Cash", "Cash", "Cash", "GCash", "GCash", "Card"];
+    var payments = ["Cash", "Cash", "Cash", "Cash", "Cash", "Cash", "Cash", "GCash", "GCash", "GCash"];
 
     var sales = [];
     var now = new Date();
@@ -980,6 +981,7 @@ var MynelleStore = (function () {
       localStorage.removeItem(DISMISSED_KEY);
       localStorage.removeItem(STOCK_LOG_KEY);
       localStorage.removeItem(IMAGES_KEY);
+      localStorage.removeItem("mynelle_orders");
       localStorage.setItem(SEEDED_KEY, "1");
       if (includeSettings) localStorage.removeItem(SETTINGS_KEY);
     } catch (e) {

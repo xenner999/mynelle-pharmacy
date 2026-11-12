@@ -99,9 +99,9 @@
   drawDonut(
     document.getElementById("healthDonutWrap"),
     [
-      { value: healthyCount, color: "#4f83d6" },
-      { value: lowOnlyCount, color: "#1b2447" },
-      { value: outOfStockCount, color: "#b3323f" },
+      { value: healthyCount, color: "#22a06b" },
+      { value: lowOnlyCount, color: "#d9640f" },
+      { value: outOfStockCount, color: "#d90416" },
     ],
     products.length,
     products.length,
@@ -111,8 +111,8 @@
   drawDonut(
     document.getElementById("shelfDonutWrap"),
     [
-      { value: safeCount, color: "#4f83d6" },
-      { value: expiringTotal, color: "#b4740e" },
+      { value: safeCount, color: "#22a06b" },
+      { value: expiringTotal, color: "#0511f2" },
     ],
     products.length,
     expiringTotal,
@@ -180,6 +180,49 @@
       "<span>" + (isToday ? time : esc(MynelleStore.formatDateTime(s.at).split(",")[0])) + "</span>";
     wrap.appendChild(row);
   });
+})();
+
+// ---- Sales trend, top products and insights (shared chart + insight code) ----
+(function () {
+  if (typeof MynelleStore === "undefined" || typeof Analytics === "undefined" || typeof Insights === "undefined") return;
+  var A = Analytics;
+  var S = MynelleStore;
+  var $ = function (id) { return document.getElementById(id); };
+  var period = "This week";
+  var TREND_PERIODS = ["Today", "This week", "This month", "This year"];
+
+  function renderSales() {
+    var sales = S.salesIn(period);
+    var b = A.buckets(period, sales);
+    $("trendTitle").textContent = period === "Today" ? "Revenue by hour" : period === "This year" ? "Revenue by month" : "Revenue by day";
+    A.line($("trendChart"), b.map(function (x) {
+      return { label: x.label, title: x.title, value: x.revenue, href: A.bucketHref(period, x) };
+    }), { label: "Revenue trend", empty: "No sales in this period" });
+
+    var sold = {}, names = {};
+    sales.forEach(function (s) {
+      s.items.forEach(function (i) {
+        sold[i.productId] = (sold[i.productId] || 0) + i.qty * i.price;
+        names[i.productId] = i.name;
+      });
+    });
+    A.bars($("topBars"), Object.keys(sold).sort(function (a, c) { return sold[c] - sold[a]; }).slice(0, 6).map(function (id) {
+      return { name: names[id], value: sold[id], href: A.links.product(id, period) };
+    }), { empty: "No sales in this period" });
+    $("trendLink").href = "sales-analysis.html?period=" + encodeURIComponent(period);
+    $("topLink").href = "product-performance.html?period=" + encodeURIComponent(period);
+  }
+
+  function renderInsights() {
+    Insights.actions($("insActions"), 6);
+    Insights.forecast($("insForecast"));
+  }
+
+  function render() { renderSales(); renderInsights(); }
+
+  A.tabs($("periodTabs"), period, function (p) { period = p; renderSales(); }, TREND_PERIODS);
+  A.onResize(render);
+  render();
 })();
 
 // Keep the dashboard in step with sales rung up at the POS (another tab/window).

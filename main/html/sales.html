@@ -23,10 +23,12 @@
     />
 
     <link rel="stylesheet" href="../css/sales.css" />
+    <link rel="stylesheet" href="../css/analytics.css" />
     <link rel="stylesheet" href="../css/back-button.css" />
     <link rel="stylesheet" href="../css/responsive.css" />
       <link rel="stylesheet" href="../../assets/uicons/uicons-regular-rounded.css" />
       <link rel="stylesheet" href="../css/stock-status.css" />
+      <link rel="stylesheet" href="../css/print.css" />
   </head>
   <body>
     <div class="app">
@@ -135,6 +137,14 @@
             </svg>
             Analytics
           </a>
+          <a class="nav-item" href="orders.html" data-key="orders">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            Orders
+          </a>
           <a class="nav-item" href="alerts.html" data-key="alerts">
             <svg
               width="17"
@@ -226,6 +236,58 @@
         </header>
 
         <div class="content">
+          <div class="kpi-grid three">
+            <a class="kpi tone-blue" href="sales-analysis.html" data-period-link="sales-analysis.html">
+              <span class="kpi-label">Revenue</span>
+              <span class="kpi-value" id="kRevenueValue"></span>
+              <span class="kpi-sub" id="kRevenueSub"></span>
+              <span class="kpi-spark" id="kRevenueSpark"></span>
+            </a>
+            <a class="kpi tone-green" href="sales-all.html" data-period-link="sales-all.html">
+              <span class="kpi-label">Transactions</span>
+              <span class="kpi-value" id="kTxnValue"></span>
+              <span class="kpi-sub" id="kTxnSub"></span>
+              <span class="kpi-spark" id="kTxnSpark"></span>
+            </a>
+            <a class="kpi tone-teal" href="sales-all.html" data-period-link="sales-all.html" data-extra="sort=highest">
+              <span class="kpi-label">Average sale</span>
+              <span class="kpi-value" id="kAvgValue"></span>
+              <span class="kpi-sub" id="kAvgSub"></span>
+              <span class="kpi-spark" id="kAvgSpark"></span>
+            </a>
+          </div>
+
+          <div class="an-grid">
+            <div class="panel">
+              <div class="an-panel-head">
+                <h2 class="an-panel-title">Payment methods</h2>
+                <a class="panel-link" href="payment-analysis.html" data-period-link="payment-analysis.html">Details</a>
+              </div>
+              <div id="payChart"></div>
+            </div>
+            <div class="panel">
+              <div class="an-panel-head">
+                <h2 class="an-panel-title">Revenue by category</h2>
+                <a class="panel-link" href="category-analysis.html" data-period-link="category-analysis.html">Details</a>
+              </div>
+              <div id="catDonut"></div>
+            </div>
+            <div class="panel">
+              <div class="an-panel-head">
+                <h2 class="an-panel-title">Revenue by hour of day</h2>
+                <a class="panel-link" href="sales-analysis.html" data-period-link="sales-analysis.html">Details</a>
+              </div>
+              <div id="hourChart"></div>
+            </div>
+            <div class="panel">
+              <div class="an-panel-head">
+                <h2 class="an-panel-title">Revenue by day of week</h2>
+                <a class="panel-link" href="sales-analysis.html" data-period-link="sales-analysis.html">Details</a>
+              </div>
+              <div id="weekdayChart"></div>
+            </div>
+          </div>
+
           <div class="panel">
             <div class="panel-head">
               <h2>Transactions</h2>
@@ -285,10 +347,13 @@
     <script src="../js/nav-toggle.js"></script>
     <script src="../js/sales-common.js"></script>
     <script src="../js/sales.js"></script>
+    <script src="../js/analytics-lib.js"></script>
+    <script src="../js/sales-charts.js"></script>
       <script src="../js/back-button.js"></script>
   <script src="../js/stock-badges.js"></script>
 <script src="../js/ui-confirm.js"></script>
 <script src="../js/confirm-hooks.js"></script>
+<script src="../js/print-records.js"></script>
 <script src="../js/ui-assist.js"></script>
 </body>
 </html>

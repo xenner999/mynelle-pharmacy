@@ -1,7 +1,6 @@
-// Manage accounts — cashier (POS) logins only.
-//
-// Admin and pharmacist accounts are deliberately filtered out: this page
-// exists so an admin can hand out and take back POS access. Accounts are
+// Manage accounts — admins create the other admin accounts and the cashier
+// (POS) logins here. There is no public registration: the developer's first
+// admin signs in, then adds everyone else from this page. Accounts are
 // never deleted from here either — they're deactivated, so the employee
 // record (and anything tied to it, like past sales) stays on file.
 //
@@ -12,7 +11,17 @@
 (function () {
   var STAFF_ROLE = "cashier";
 
+  // Only admins may manage accounts.
+  var session = MynelleAuth.getSession();
+  var me = session && session.account;
+  if (!me || me.role !== "admin") {
+    window.location.replace("dashboard.html");
+    return;
+  }
+
   var accounts = [];
+  var admins = [];
+  var modalRole = STAFF_ROLE;
   var editingId = null;
   var pendingStatusId = null;
 
@@ -119,29 +128,77 @@
       .join("");
   }
 
+  function renderAdmins() {
+    var box = el("adminRows");
+    if (!box) return;
+    box.innerHTML = admins
+      .map(function (a) {
+        var status = statusOf(a);
+        var isActive = status === "active";
+        var isMe = a.id === me.id;
+        return (
+          '<div class="table-row" data-id="' + escapeHtml(a.id) + '">' +
+          '<span class="cell-muted">' + escapeHtml(a.id) + "</span>" +
+          '<span class="cell-strong">' + escapeHtml(a.fullName) + (isMe ? " (you)" : "") + "</span>" +
+          '<span class="cell-muted">' + escapeHtml(a.username) + "</span>" +
+          '<span class="cell-muted cell-ellipsis">' + escapeHtml(a.email) + "</span>" +
+          '<span class="cell-muted">Admin</span>' +
+          '<span><span class="status-pill ' + status + '">' + status + "</span></span>" +
+          '<span class="row-actions">' +
+          '<button class="action-icon-btn" type="button" data-action="edit" title="Edit account" aria-label="Edit account">' +
+          EDIT_ICON + "</button>" +
+          (isMe
+            ? ""
+            : isActive
+            ? '<button class="action-icon-btn danger" type="button" data-action="deactivate" title="Deactivate account" aria-label="Deactivate account">' +
+              DEACTIVATE_ICON + "</button>"
+            : '<button class="action-icon-btn success" type="button" data-action="reactivate" title="Reactivate account" aria-label="Reactivate account">' +
+              REACTIVATE_ICON + "</button>") +
+          "</span>" +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+
+  function findAny(id) {
+    return (
+      accounts.concat(admins).filter(function (a) {
+        return a.id === id;
+      })[0] || null
+    );
+  }
+
   async function refresh() {
     try {
       var all = await MynelleAuth.listStaff();
       accounts = all.filter(function (a) {
         return a.role === STAFF_ROLE;
       });
+      admins = all.filter(function (a) {
+        return a.role === "admin";
+      });
     } catch (e) {
       accounts = [];
+      admins = [];
     }
     render();
+    renderAdmins();
     if (typeof renderReport === "function") renderReport();
   }
 
   searchEl.addEventListener("input", render);
 
-  rowsEl.addEventListener("click", function (e) {
+  function onRowClick(e) {
     var btn = e.target.closest("[data-action]");
     if (!btn) return;
     var id = btn.closest(".table-row").dataset.id;
-    if (btn.dataset.action === "edit") openModal(id);
+    var acc = findAny(id);
+    if (btn.dataset.action === "edit") openModal(id, acc && acc.role);
     else if (btn.dataset.action === "deactivate") openStatus(id, false);
     else openStatus(id, true);
-  });
+  }
+  rowsEl.addEventListener("click", onRowClick);
 
   // -------------------------------------------------------------------
   // Add / edit modal
@@ -149,11 +206,8 @@
   var overlay = el("accountOverlay");
   var form = el("accountForm");
 
-  function nextIdPreview() {
-    var used = accounts.filter(function (a) {
-      return String(a.id).indexOf("CSH-") === 0;
-    }).length;
-    return "CSH-" + String(used + 1).padStart(4, "0");
+  function nextIdPreview(role) {
+    return MynelleAuth.nextStaffId(accounts.concat(admins), role);
   }
 
   function clearErrors() {
@@ -168,25 +222,45 @@
     });
   }
 
-  function openModal(id) {
+  function openModal(id, role) {
     clearErrors();
     editingId = id || null;
     var editing = !!id;
-    var account = editing
-      ? accounts.find(function (a) {
-          return a.id === id;
-        })
-      : null;
+    var account = editing ? findAny(id) : null;
+    modalRole = account ? account.role : role || STAFF_ROLE;
+    var isAdmin = modalRole === "admin";
+    var secret = isAdmin ? "password" : "PIN";
 
-    el("accountModalTitle").textContent = editing
-      ? "Edit cashier account"
-      : "Add cashier account";
-    el("accountSubmit").textContent = editing ? "Save changes" : "Add account";
-    el("fStatusField").style.display = editing ? "flex" : "none";
-    el("fPasswordLabel").textContent = editing ? "New PIN" : "PIN (4\u20136 digits) *";
+    el("accountModalTitle").textContent =
+      (editing ? "Edit " : "Add ") + (isAdmin ? "admin" : "cashier") + " account";
+    el("accountSubmit").textContent = editing
+      ? "Save changes"
+      : isAdmin
+      ? "Add admin"
+      : "Add account";
+    el("fStatusField").style.display = editing && !(isAdmin && account.id === me.id) ? "flex" : "none";
+    el("fRateField").style.display = isAdmin ? "none" : "";
+    var pw = el("fPassword");
+    var cf = el("fConfirm");
+    [pw, cf].forEach(function (inp) {
+      inp.removeAttribute("maxlength");
+      inp.removeAttribute("pattern");
+      if (isAdmin) {
+        inp.setAttribute("inputmode", "text");
+      } else {
+        inp.setAttribute("inputmode", "numeric");
+        inp.setAttribute("maxlength", "6");
+        inp.setAttribute("pattern", "[0-9]*");
+      }
+    });
+    el("fPasswordLabel").textContent = editing
+      ? "New " + secret
+      : isAdmin
+      ? "Password (at least 8 characters) *"
+      : "PIN (4\u20136 digits) *";
     el("fConfirmLabel").textContent = editing
-      ? "Confirm new PIN"
-      : "Confirm PIN *";
+      ? "Confirm new " + secret
+      : "Confirm " + secret + " *";
 
     if (editing && account) {
       el("fEmployeeId").value = account.id;
@@ -197,11 +271,11 @@
       el("fRate").value = account.hourlyRate || "";
       el("fPassword").value = "";
       el("fConfirm").value = "";
-      el("fPassword").placeholder = "Leave blank to keep current PIN";
+      el("fPassword").placeholder = "Leave blank to keep current " + secret;
       el("fConfirm").placeholder = "Leave blank to keep current";
     } else {
       form.reset();
-      el("fEmployeeId").value = nextIdPreview();
+      el("fEmployeeId").value = nextIdPreview(modalRole);
       el("fRate").value = "";
       el("fPassword").placeholder = "";
       el("fConfirm").placeholder = "";
@@ -219,7 +293,7 @@
   }
 
   el("addAccountBtn").addEventListener("click", function () {
-    openModal(null);
+    openModal(null, STAFF_ROLE);
   });
   el("accountClose").addEventListener("click", closeModal);
   el("accountCancel").addEventListener("click", closeModal);
@@ -250,29 +324,40 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       fail("fEmail", "errEmail", "Enter a valid email address.");
 
-    var rateRaw = el("fRate").value.trim();
+    var isAdmin = modalRole === "admin";
+    var rateRaw = isAdmin ? "" : el("fRate").value.trim();
     if (rateRaw !== "" && !(Number(rateRaw) >= 0))
       fail("fRate", "errRate", "Enter a valid hourly rate.");
     var hourlyRate = rateRaw === "" ? 0 : Number(rateRaw);
 
     var wantsPassword = !editingId || password || confirm;
     if (wantsPassword) {
-      if (!/^\d{4,6}$/.test(password))
-        fail("fPassword", "errPassword", "PIN must be 4 to 6 digits.");
-      if (password !== confirm)
-        fail("fConfirm", "errConfirm", "PINs do not match.");
+      if (isAdmin) {
+        if (password.length < 8)
+          fail("fPassword", "errPassword", "Password must be at least 8 characters.");
+        if (password !== confirm)
+          fail("fConfirm", "errConfirm", "Passwords do not match.");
+      } else {
+        if (!/^\d{4,6}$/.test(password))
+          fail("fPassword", "errPassword", "PIN must be 4 to 6 digits.");
+        if (password !== confirm)
+          fail("fConfirm", "errConfirm", "PINs do not match.");
+      }
     }
     if (!ok) return;
 
     if (
       !MynelleConfirm.gate(form, {
-        title: editingId ? "Save changes to this account?" : "Create this cashier account?",
+        title: editingId
+          ? "Save changes to this account?"
+          : isAdmin
+          ? "Create this admin account?"
+          : "Create this cashier account?",
         details: [
           ["Name", fullName],
           ["Username", username],
           ["Email", email],
-          ["Hourly rate", hourlyRate],
-        ],
+        ].concat(isAdmin ? [] : [["Hourly rate", hourlyRate]]),
         confirmText: editingId ? "Save changes" : "Create account",
         tone: "success",
       })
@@ -285,10 +370,10 @@
           fullName: fullName,
           username: username,
           email: email,
-          role: STAFF_ROLE,
-          status: el("fStatus").value,
+          role: modalRole,
           hourlyRate: hourlyRate,
         };
+        if (!(isAdmin && editingId === me.id)) patch.status = el("fStatus").value;
         if (password) patch.password = password;
         await MynelleAuth.updateStaff(editingId, patch);
         toast("Account updated");
@@ -297,12 +382,16 @@
           fullName: fullName,
           username: username,
           email: email,
-          role: STAFF_ROLE,
+          role: modalRole,
           hourlyRate: hourlyRate,
           password: password,
           confirmPassword: confirm,
         });
-        toast("Cashier account created — they can sign in now");
+        toast(
+          isAdmin
+            ? "Admin account created — they can sign in now"
+            : "Cashier account created — they can sign in now"
+        );
       }
       closeModal();
       await refresh();
@@ -318,9 +407,7 @@
   var reactivating = false;
 
   function openStatus(id, reactivate) {
-    var account = accounts.find(function (a) {
-      return a.id === id;
-    });
+    var account = findAny(id);
     if (!account) return;
 
     pendingStatusId = id;
@@ -334,9 +421,9 @@
     el("statusConfirm").className = reactivate ? "btn-primary" : "btn-danger";
     el("statusText").textContent = reactivate
       ? account.fullName +
-        " will be able to sign in to the POS again straight away."
+        (account.role === "admin" ? " will be able to sign in to the dashboard again straight away." : " will be able to sign in to the POS again straight away.")
       : account.fullName +
-        " won't be able to sign in to the POS. The record stays on file and can be reactivated any time.";
+        (account.role === "admin" ? " won't be able to sign in to the dashboard." : " won't be able to sign in to the POS.") + " The record stays on file and can be reactivated any time.";
 
     if (!reactivate) el("statusReason").value = "inactive";
 

@@ -94,9 +94,9 @@ function renderDonut(counts, total) {
   var r = 52;
   var c = 2 * Math.PI * r;
   var segments = [
-    { key: "out", color: "#b3323f", value: counts.out },
+    { key: "out", color: "#d90416", value: counts.out },
     { key: "low", color: "#b4740e", value: counts.low },
-    { key: "expiring", color: "#1b2447", value: counts.expiring },
+    { key: "expiring", color: "#0d0d0d", value: counts.expiring },
   ];
   var offset = 0;
   var circles = segments

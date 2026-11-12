@@ -10,16 +10,16 @@
   var style = document.createElement("style");
   style.textContent =
     ".search-wrap{position:relative}" +
-    ".gs-drop{position:absolute;left:0;top:calc(100% + 8px);width:min(520px,92vw);max-height:70vh;overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 18px 44px rgba(15,20,40,.18);z-index:80;display:none;padding:6px}" +
+    ".gs-drop{position:absolute;left:0;top:calc(100% + 8px);width:min(520px,92vw);max-height:70vh;overflow:auto;background:#fff;border:1px solid #e3e6ed;border-radius:14px;box-shadow:0 18px 44px rgba(12, 12, 12,.18);z-index:80;display:none;padding:6px}" +
     ".gs-drop.open{display:block}" +
-    ".gs-group{padding:8px 10px 4px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#9ca3af}" +
-    ".gs-item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 10px;border-radius:9px;color:#111827;text-decoration:none;font-size:13.5px;cursor:pointer}" +
-    ".gs-item:hover,.gs-item.active{background:#f1f2f9}" +
+    ".gs-group{padding:8px 10px 4px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#9ea3ad}" +
+    ".gs-item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 10px;border-radius:9px;color:#0d0d0d;text-decoration:none;font-size:13.5px;cursor:pointer}" +
+    ".gs-item:hover,.gs-item.active{background:#f0f3fa}" +
     ".gs-main{min-width:0}.gs-main b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
     ".gs-main span{display:block;font-size:12px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
     ".gs-side{font-size:12px;color:#6b7280;white-space:nowrap}" +
     ".gs-none{padding:18px;text-align:center;color:#6b7280;font-size:13.5px}" +
-    ":root[data-theme=dark] .gs-drop{background:#1f2430;border-color:#323847}:root[data-theme=dark] .gs-item{color:#e5e7eb}:root[data-theme=dark] .gs-item:hover,:root[data-theme=dark] .gs-item.active{background:#2a3040}";
+    ":root[data-theme=dark] .gs-drop{background:#171717;border-color:#2a2a2a}:root[data-theme=dark] .gs-item{color:#e3e6ed}:root[data-theme=dark] .gs-item:hover,:root[data-theme=dark] .gs-item.active{background:#232323}";
   document.head.appendChild(style);
 
   var drop = document.createElement("div");
@@ -32,6 +32,7 @@
     ["Sales", "sales.html", "transactions revenue"],
     ["Reports", "reports.html", "sales trend best selling"],
     ["Analytics", "analytics.html", "charts category payment expiry valuation"],
+    ["Orders", "orders.html", "purchase order restock reorder supplier receive delivery"],
     ["Alerts", "alerts.html", "notifications low stock expiring out of stock"],
     ["Low stock", "low-stock.html", "reorder alerts"],
     ["Out of stock", "out-of-stock.html", "alerts"],

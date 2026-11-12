@@ -1,27 +1,30 @@
 :root {
+  --cyan: #05aff2;
+  --blue-bright: #0511f2;
+  --brand-red: #d90416;
   --header-h: 86px;
-  --ink: #161b33;
-  --navy-deep: #12172f;
-  --bg: #f3f4f8;
+  --ink: #0d0d0d;
+  --navy-deep: #0d0d0d;
+  --bg: #f2f4f9;
   --card: #ffffff;
-  --border: #e3e6ee;
-  --text: #1b2333;
+  --border: #e1e6f0;
+  --text: #0d0d0d;
   --text-muted: #6b7280;
-  --blue: #2c4a8c;
-  --blue-deep: #1f3564;
+  --blue: #0442bf;
+  --blue-deep: #032f8a;
   --green: #1f7a5c;
   --green-deep: #175e46;
   --gold: #b4740e;
   --gold-deep: #8c5a0a;
-  --navy: #1b2447;
-  --maroon: #7a2036;
-  --maroon-deep: #5e1728;
-  --teal: #0e7c86;
-  --teal-deep: #0b6169;
+  --navy: #0d0d0d;
+  --maroon: #d90416;
+  --maroon-deep: #a00310;
+  --teal: #0580b8;
+  --teal-deep: #04668f;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --shadow-sm: 0 1px 2px rgba(20, 24, 45, 0.06);
-  --shadow-md: 0 6px 20px rgba(20, 24, 45, 0.08);
+  --shadow-sm: 0 1px 2px rgba(17, 17, 17, 0.06);
+  --shadow-md: 0 6px 20px rgba(17, 17, 17, 0.08);
 }
 * {
   box-sizing: border-box;
@@ -111,12 +114,13 @@ nav.side-nav {
 .nav-item.active {
   background: var(--blue);
   color: #fff;
+  box-shadow: inset 4px 0 0 var(--cyan);
 }
 .nav-item.active svg {
   opacity: 1;
 }
 .nav-item:hover:not(.active) {
-  background: rgba(44, 74, 140, 0.08);
+  background: rgba(4, 66, 191, 0.08);
   color: var(--text);
 }
 
@@ -238,7 +242,7 @@ a.add-btn {
   text-decoration: none;
 }
 .add-btn:hover {
-  background: #e3e9fb;
+  background: #e0eafe;
 }
 
 /* Status filter — single collapsible dropdown */
@@ -274,7 +278,7 @@ a.add-btn {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(22, 33, 62, 0.14);
+  box-shadow: 0 12px 30px rgba(25, 25, 25, 0.14);
   padding: 6px;
   display: none;
   flex-direction: column;
@@ -381,15 +385,15 @@ a.add-btn {
 
 /* ===== Dark theme (Settings → General) ===== */
 :root[data-theme="dark"] {
-  --bg: #0e1428;
-  --card: #171e3a;
-  --border: #2b3358;
-  --text: #e7eaf6;
-  --text-muted: #98a0c4;
-  --blue-deep: #6685d6;
+  --bg: #0d0d0d;
+  --card: #171717;
+  --border: #2e2e2e;
+  --text: #ececec;
+  --text-muted: #a8acb4;
+  --blue-deep: #6f9bf5;
   --gold-deep: #d99a3a;
   --green-deep: #3fae86;
-  --red-deep: #e2727e;
+  --red-deep: #f75d6a;
 }
 :root[data-theme="dark"] body {
   background: var(--bg);
@@ -422,7 +426,7 @@ a.add-btn {
   background: rgba(255, 255, 255, 0.06);
 }
 :root[data-theme="dark"] .empty-state svg {
-  stroke: #333c66;
+  stroke: #383838;
 }
 :root[data-theme="dark"] .settings-input,
 :root[data-theme="dark"] .settings-select {
@@ -462,7 +466,7 @@ a.add-btn {
 }
 .settings-input.has-error,
 .settings-select.has-error {
-  border-color: var(--red, #d14343);
+  border-color: var(--red, #d90416);
 }
 
 /* ===== Modal ===== */
@@ -470,7 +474,7 @@ a.add-btn {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(15, 20, 40, 0.45);
+  background: rgba(12, 12, 12, 0.45);
   align-items: center;
   justify-content: center;
   z-index: 100;
@@ -486,7 +490,7 @@ a.add-btn {
   max-width: 440px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 24px 60px rgba(15, 20, 40, 0.35);
+  box-shadow: 0 24px 60px rgba(12, 12, 12, 0.35);
   animation: modal-pop 0.15s ease;
 }
 @keyframes modal-pop {
@@ -559,7 +563,7 @@ a.add-btn {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: 0 12px 28px rgba(15, 20, 40, 0.16);
+  box-shadow: 0 12px 28px rgba(12, 12, 12, 0.16);
   max-height: 220px;
   overflow-y: auto;
   padding: 6px;
@@ -591,7 +595,7 @@ a.add-btn {
 }
 .field-error {
   font-size: 11px;
-  color: var(--red, #d14343);
+  color: var(--red, #d90416);
   min-height: 14px;
   display: block;
 }
@@ -643,7 +647,7 @@ a.add-btn {
   border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  box-shadow: 0 12px 30px rgba(15, 20, 40, 0.25);
+  box-shadow: 0 12px 30px rgba(12, 12, 12, 0.25);
   opacity: 0;
   pointer-events: none;
   transition:
@@ -663,7 +667,7 @@ a.add-btn {
   background: none;
   border: none;
   padding: 0;
-  color: #9db8f2;
+  color: #92b4fd;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -697,7 +701,7 @@ a.add-btn {
   color: var(--blue);
 }
 .action-icon-btn.danger:hover {
-  color: var(--red, #d14343);
+  color: var(--red, #d90416);
 }
 .stock-pill {
   display: inline-flex;
@@ -725,7 +729,7 @@ a.add-btn {
 }
 .critical-note {
   font-size: 11px;
-  color: var(--red, #d14343);
+  color: var(--red, #d90416);
   margin-top: 2px;
 }
 .category-pill {
@@ -951,8 +955,8 @@ a.add-btn {
   color: var(--text-muted);
 }
 .batch-tag.red {
-  background: rgba(179, 50, 63, 0.12);
-  color: var(--red, #b3323f);
+  background: rgba(217, 4, 22, 0.12);
+  color: var(--red, #d90416);
 }
 .batch-tag.gold {
   background: rgba(180, 116, 14, 0.14);
@@ -973,7 +977,7 @@ a.add-btn {
   font-weight: 600;
 }
 .expiry-cell .sub.bad {
-  color: var(--red, #b3323f);
+  color: var(--red, #d90416);
   font-weight: 600;
 }
 @media (max-width: 640px) {
@@ -995,7 +999,7 @@ a.add-btn {
   margin-right: auto;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--red, #b3323f);
+  color: var(--red, #d90416);
 }
 
 /* Add product form: compact like the original, extras tucked away */

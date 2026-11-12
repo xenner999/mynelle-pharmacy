@@ -54,13 +54,13 @@
   body.nav-open .sidebar {
     transform: none;
     visibility: visible;
-    box-shadow: 0 0 48px rgba(15, 20, 40, 0.35);
+    box-shadow: 0 0 48px rgba(12, 12, 12, 0.35);
   }
   .nav-backdrop {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(15, 20, 40, 0.45);
+    background: rgba(12, 12, 12, 0.45);
     z-index: 350;
     opacity: 0;
     pointer-events: none;
@@ -180,4 +180,74 @@
     width: auto;
     flex: 1 1 90px;
   }
+}
+
+/* ===== Phone fixes, round 2 =====
+   Grid/flex children default to min-width:auto, so one wide table or chart
+   stretched the whole page sideways. These let them shrink and scroll inside. */
+main, .content, .panel, .stat-card, .detail-stat,
+.panel-grid > *, .an-grid > *, .stat-grid > *, .an-donut > * {
+  min-width: 0;
+}
+.panel { max-width: 100%; }
+.panel svg { max-width: 100%; }
+.panel-head-actions, .panel-head-right, .detail-actions, .all-toolbar { flex-wrap: wrap; }
+.an-link-row { min-width: 0; }
+.an-link-row * { min-width: 0; }
+
+@media (max-width: 960px) {
+  .panel-grid,
+  .an-grid,
+  .notif-analytics-grid { grid-template-columns: minmax(0, 1fr); }
+  .panel.wide { grid-column: auto; }
+
+  /* header + rows that sit side by side scroll together */
+  .panel:has(> .alert-table-head),
+  .panel:has(> #alertTableWrap) { overflow-x: auto; }
+
+  /* big charts: shrink to the screen */
+  .an-donut { justify-content: center; }
+  .an-donut svg { width: min(168px, 60vw); height: auto; aspect-ratio: 1; }
+}
+
+@media (max-width: 640px) {
+  .mr-tools .mr-print-btn span, .mr-tools .mr-export-btn span { display: none; }
+  .mr-print-btn { padding: 6px 10px; margin-left: 0; }
+  .topbar-actions .icon-btn,
+  .topbar-actions button { flex: none; }
+  h1 { font-size: 21px; }
+}
+
+/* easier to tap on touch screens */
+@media (pointer: coarse) {
+  .btn-primary, .btn-secondary, .pager-btn, .mr-print-btn, .settings-input, .settings-select,
+  .form-field input, .form-field select { min-height: 44px; }
+  .nav-item { min-height: 46px; }
+  input, select, textarea { font-size: 16px; } /* stops iOS zooming into fields */
+}
+
+/* Settings: show every tab on a phone instead of hiding some off-screen */
+@media (max-width: 720px) {
+  .settings-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    overflow: visible;
+  }
+  .settings-tab { text-align: center; white-space: normal; }
+}
+
+/* ===== Small-phone polish ===== */
+@media (max-width: 960px) {
+  /* last-resort guard so a stray few pixels never makes the page wobble sideways */
+  html, body { max-width: 100%; overflow-x: hidden; overflow-x: clip; }
+
+  /* detail lists: header + rows scroll together instead of squeezing */
+  .panel:has(> .detail-table-head),
+  .panel:has(> * > .detail-table-head) { overflow-x: auto; }
+  .detail-table-head, .detail-row { min-width: 540px; }
+
+  /* chart legends wrap rather than push the page wider */
+  .an-legend { min-width: 0; flex: 1 1 140px; }
+  .an-legend-row { flex-wrap: wrap; overflow-wrap: anywhere; min-width: 0; }
 }

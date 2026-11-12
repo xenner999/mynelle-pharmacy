@@ -12,29 +12,29 @@
   var CSS = [
     ".profile-wrap{position:relative;display:inline-flex}",
     ".profile-menu{position:absolute;top:calc(100% + 10px);right:0;width:250px;",
-    "background:var(--card,#fff);border:1px solid var(--border,#e3e6ee);border-radius:14px;",
-    "box-shadow:0 18px 44px rgba(15,20,40,.22);overflow:hidden;z-index:120;",
+    "background:var(--card,#fff);border:1px solid var(--border,#e1e6f0);border-radius:14px;",
+    "box-shadow:0 18px 44px rgba(12, 12, 12,.22);overflow:hidden;z-index:120;",
     "opacity:0;visibility:hidden;transform:translateY(-6px);",
     "transition:opacity .14s ease,transform .14s ease,visibility .14s}",
     ".profile-wrap.open .profile-menu{opacity:1;visibility:visible;transform:none}",
-    ".profile-menu-head{background:var(--ink,#16213e);color:#fff;padding:18px 16px 16px;",
+    ".profile-menu-head{background:var(--ink,#191919);color:#fff;padding:18px 16px 16px;",
     "display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}",
-    ".profile-avatar{width:52px;height:52px;border-radius:50%;background:#2f6fed;color:#fff;",
+    ".profile-avatar{width:52px;height:52px;border-radius:50%;background:#0a52d4;color:#fff;",
     "display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;",
-    "letter-spacing:.5px;border:2px solid rgba(255,255,255,.35)}",
+    "letter-spacing:.5px;border:2px solid rgba(255, 255, 255,.35)}",
     ".profile-name{font-size:14px;font-weight:700;line-height:1.2;word-break:break-word}",
     ".profile-role{font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;",
-    "color:rgba(255,255,255,.65)}",
+    "color:rgba(255, 255, 255,.65)}",
     ".profile-menu-body{padding:8px}",
     ".profile-menu-item{display:flex;align-items:center;gap:12px;width:100%;",
     "padding:11px 12px;border:none;background:none;border-radius:10px;cursor:pointer;",
-    "font-family:inherit;font-size:13.5px;font-weight:600;color:var(--text,#1b2333);",
+    "font-family:inherit;font-size:13.5px;font-weight:600;color:var(--text,#0d0d0d);",
     "text-align:left;text-decoration:none}",
-    ".profile-menu-item:hover{background:var(--bg,#eef0f5)}",
-    ".profile-menu-item svg{flex-shrink:0;color:var(--text-muted,#7a8299)}",
-    ".profile-menu-sep{height:1px;background:var(--border,#e3e6ee);margin:6px 8px}",
-    ".profile-menu-item.danger{color:#d14343}",
-    ".profile-menu-item.danger svg{color:#d14343}",
+    ".profile-menu-item:hover{background:var(--bg,#eef1f6)}",
+    ".profile-menu-item svg{flex-shrink:0;color:var(--text-muted,#808693)}",
+    ".profile-menu-sep{height:1px;background:var(--border,#e1e6f0);margin:6px 8px}",
+    ".profile-menu-item.danger{color:#d90416}",
+    ".profile-menu-item.danger svg{color:#d90416}",
   ].join("");
 
   var ICONS = {
@@ -92,7 +92,9 @@
       ICONS.pos + "Cashier terminal (POS)</a>" +
       (isAdmin
         ? '<a class="profile-menu-item" role="menuitem" href="accounts.html">' +
-          ICONS.manage + "Manage accounts</a>"
+          ICONS.manage + "Cashier accounts</a>" +
+          '<a class="profile-menu-item" role="menuitem" href="admins.html">' +
+          ICONS.manage + "Admin accounts</a>"
         : "") +
       '<div class="profile-menu-sep"></div>' +
       '<button class="profile-menu-item danger" role="menuitem" type="button" id="profileLogout">' +

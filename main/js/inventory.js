@@ -4,6 +4,8 @@ var filterToggle = document.getElementById("filterToggle");
 var filterLabel = document.getElementById("filterLabel");
 var filterMenu = document.getElementById("filterMenu");
 var currentFilter = "all";
+var currentPage = 0;
+var pageSize = 10;
 
 // Standard pharmacy categories are appended to the filter menu so stock can
 // be viewed shelf by shelf.
@@ -39,6 +41,7 @@ filterMenu.addEventListener("click", function (e) {
   filterDropdown.classList.remove("open");
   filterToggle.setAttribute("aria-expanded", "false");
   currentFilter = option.dataset.filter;
+  currentPage = 0;
   renderProducts();
 });
 
@@ -76,6 +79,7 @@ searchInput.addEventListener("input", function () {
   window.clearTimeout(searchTimer);
   searchTimer = window.setTimeout(function () {
     searchQuery = searchInput.value;
+    currentPage = 0;
     renderProducts();
   }, 120);
 });
@@ -138,9 +142,11 @@ function renderProducts() {
 
   // Sort per the default sort order set in Settings → Inventory & stock
   var sort = settings.inventory.defaultSort;
-  // "added" (default) keeps the fixed order products were added in, so rows
-  // never jump around after an edit or restock. The other options re-sort.
+  // "added" (default) = newest added first, "oldest" = oldest added first.
+  // Both follow the order products were added in, so rows never jump around
+  // after an edit or restock. The other options re-sort.
   products = products.slice();
+  if (sort === "added") products.reverse();
   if (sort === "name-az" || sort === "name-desc" || sort === "stock-asc" || sort === "expiry-soonest") {
     products.sort(function (a, b) {
       if (sort === "name-desc") return b.name.localeCompare(a.name);
@@ -204,10 +210,16 @@ function renderProducts() {
         : "Try a different filter or search term.") +
       "</p>";
     tableWrap.appendChild(empty);
+    renderPager(0, 0, 0, 1);
     return;
   }
 
-  filtered.forEach(function (p) {
+  var totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  if (currentPage > totalPages - 1) currentPage = totalPages - 1;
+  var pageStart = currentPage * pageSize;
+  var pageItems = filtered.slice(pageStart, pageStart + pageSize);
+
+  pageItems.forEach(function (p) {
     var row = document.createElement("div");
     row.className = "table-row";
     row.dataset.id = p.id;
@@ -298,6 +310,68 @@ function renderProducts() {
 
     tableWrap.appendChild(row);
   });
+
+  renderPager(filtered.length, pageStart, pageItems.length, totalPages);
+}
+
+// Previous / Next controls under the table
+function getPager() {
+  var el = document.getElementById("invPager");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "invPager";
+    el.className = "pager";
+    tableWrap.parentNode.insertBefore(el, tableWrap.nextSibling);
+    el.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-page]");
+      if (!btn || btn.disabled) return;
+      var act = btn.dataset.page;
+      var last = Math.max(1, Math.ceil(lastTotal / pageSize)) - 1;
+      if (act === "first") currentPage = 0;
+      else if (act === "prev") currentPage = Math.max(0, currentPage - 1);
+      else if (act === "next") currentPage = Math.min(last, currentPage + 1);
+      else if (act === "last") currentPage = last;
+      renderProducts();
+      tableWrap.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+    el.addEventListener("change", function (e) {
+      if (e.target.id !== "invPageSize") return;
+      pageSize = Number(e.target.value) || 10;
+      currentPage = 0;
+      renderProducts();
+    });
+  }
+  return el;
+}
+var lastTotal = 0;
+
+function renderPager(total, start, shown, totalPages) {
+  var pager = getPager();
+  lastTotal = total;
+  if (total === 0) {
+    pager.innerHTML = "";
+    pager.style.display = "none";
+    return;
+  }
+  pager.style.display = "";
+  var atFirst = currentPage === 0;
+  var atLast = currentPage >= totalPages - 1;
+  pager.innerHTML =
+    '<span class="pager-info">Showing ' + (start + 1) + "\u2013" + (start + shown) +
+    " of " + total.toLocaleString("en-US") + " products</span>" +
+    '<div class="pager-actions">' +
+    '<label class="pager-size">Rows per page ' +
+    '<select id="invPageSize" aria-label="Rows per page">' +
+    [10, 25, 50, 100].map(function (n) {
+      return '<option value="' + n + '"' + (n === pageSize ? " selected" : "") + ">" + n + "</option>";
+    }).join("") +
+    "</select></label>" +
+    '<button type="button" class="pager-btn" data-page="first"' + (atFirst ? " disabled" : "") + ">First</button>" +
+    '<button type="button" class="pager-btn" data-page="prev"' + (atFirst ? " disabled" : "") + ">Previous</button>" +
+    '<span class="pager-page">Page ' + (currentPage + 1) + " of " + totalPages + "</span>" +
+    '<button type="button" class="pager-btn" data-page="next"' + (atLast ? " disabled" : "") + ">Next</button>" +
+    '<button type="button" class="pager-btn" data-page="last"' + (atLast ? " disabled" : "") + ">Last</button>" +
+    "</div>";
 }
 
 tableWrap.addEventListener("click", function (e) {

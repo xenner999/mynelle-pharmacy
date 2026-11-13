@@ -32,7 +32,7 @@ var MynelleStore = (function () {
       expiryWindowDays: 180, // "expiring soon" = within half a year of the expiry date
       defaultUnit: "pcs",
       requireExpiry: false,
-      defaultSort: "added", // fixed order products were added in
+      defaultSort: "added", // newest added first
       // Product IDs look like PRD-0001. Each category can use its own prefix.
       idPrefix: "PRD",
       idDigits: 4,

@@ -95,3 +95,18 @@ body.or-noscroll { overflow: hidden; }
   .or-sign { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 50px; }
   .or-sign div { border-top: 1px solid #000; padding-top: 4px; text-align: center; }
 }
+
+/* Editable status dropdown (looks like the status pill) */
+select.or-status-select {
+  appearance: none; -webkit-appearance: none; border: 0; cursor: pointer; font-family: inherit;
+  padding: 3px 24px 3px 10px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%23666' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+select.or-status-select.draft { background-color: rgba(107, 114, 128, .16); }
+select.or-status-select.ordered { background-color: rgba(5, 175, 242, .16); }
+select.or-status-select.received { background-color: rgba(22, 163, 74, .16); }
+select.or-status-select.cancelled { background-color: rgba(107, 114, 128, .12); text-decoration: none; }
+select.or-status-select:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+select.or-status-select option { color: var(--text, #111); background: var(--surface, #fff); text-decoration: none; }
+.or-pill-note { margin-left: 6px; }

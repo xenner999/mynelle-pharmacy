@@ -94,6 +94,29 @@ var Orders = (function () {
     write(list);
     return o;
   }
+  // Change an order's status directly (any status -> any status).
+  // This only edits the order record. It never adds or removes inventory stock;
+  // use receive() to book delivered goods into stock.
+  function setStatus(id, status) {
+    if (STATUSES.indexOf(status) === -1) throw new Error("Unknown status.");
+    var list = read();
+    var o = list.filter(function (x) { return x.id === id; })[0];
+    if (!o) throw new Error("Order not found.");
+    if (o.status === status) return o;
+    var now = new Date().toISOString();
+    if (status === "draft") {
+      o.orderedAt = null; o.receivedAt = null;
+    } else if (status === "ordered") {
+      if (!o.supplier) throw new Error("Enter the supplier before placing the order.");
+      o.orderedAt = o.orderedAt || now; o.receivedAt = null;
+    } else if (status === "received") {
+      o.orderedAt = o.orderedAt || now; o.receivedAt = o.receivedAt || now;
+      o.lines.forEach(function (l) { l.receivedQty = l.qty; });
+    }
+    o.status = status;
+    write(list);
+    return o;
+  }
   function remove(id) {
     var list = read();
     var o = list.filter(function (x) { return x.id === id; })[0];
@@ -219,7 +242,7 @@ var Orders = (function () {
   return {
     KEY: KEY, STATUSES: STATUSES, COVER_DAYS: COVER_DAYS,
     getOrders: getOrders, getOrder: getOrder, create: create, update: update, place: place,
-    cancel: cancel, remove: remove, receive: receive,
+    cancel: cancel, setStatus: setStatus, remove: remove, receive: receive,
     total: total, openLeft: openLeft, incoming: incoming, incomingMap: incomingMap, isOverdue: isOverdue,
     estCost: estCost, restockHref: restockHref, restockLabel: restockLabel, velocity: velocity, suggestions: suggestions, clear: clear,
   };

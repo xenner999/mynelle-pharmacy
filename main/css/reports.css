@@ -32,7 +32,13 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(900px 520px at 100% 0%, rgba(5, 175, 242, 0.18), transparent 60%),
+    radial-gradient(820px 520px at 0% 100%, rgba(4, 66, 191, 0.12), transparent 60%),
+    radial-gradient(520px 320px at 100% 100%, rgba(217, 4, 22, 0.07), transparent 65%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--text);
 }
 .app {
@@ -44,7 +50,7 @@ body {
 .sidebar {
   width: 250px;
   flex-shrink: 0;
-  background: #ffffff;
+  background: linear-gradient(to bottom, #dff4fe, #eef3ff 55%, #fde8ea);
   border-right: 1px solid var(--border);
   color: var(--text);
   display: flex;
@@ -146,8 +152,8 @@ header.topbar {
   align-items: center;
   gap: 16px;
   padding: 0 32px;
-  border-bottom: 1px solid var(--border);
-  background: #ffffff;
+  border-bottom: 3px solid #05aff2;
+  background: linear-gradient(to right, #dff4fe, #eef3ff 55%, #fde8ea);
 }
 .search-wrap {
   position: relative;
@@ -502,4 +508,9 @@ header.topbar {
 }
 :root[data-theme="dark"] .panel-link {
   color: #81a8fc;
+}
+
+/* Dark theme: keep header plain, thin border */
+:root[data-theme="dark"] header.topbar {
+  border-bottom: 1px solid var(--border);
 }

@@ -50,7 +50,7 @@ body {
 .sidebar {
   width: 250px;
   flex-shrink: 0;
-  background: #ffffff;
+  background: linear-gradient(to bottom, #dff4fe, #eef3ff 55%, #fde8ea);
   border-right: 1px solid var(--border);
   color: var(--text);
   display: flex;
@@ -152,8 +152,8 @@ header.topbar {
   align-items: center;
   gap: 16px;
   padding: 0 32px;
-  border-bottom: 1px solid var(--border);
-  background: #ffffff;
+  border-bottom: 3px solid #05aff2;
+  background: linear-gradient(to right, #dff4fe, #eef3ff 55%, #fde8ea);
 }
 .search-wrap {
   position: relative;
@@ -591,3 +591,8 @@ header.topbar {
 .panel .period-tabs { margin-bottom: 12px; }
 .panel .an-empty { padding: 28px 0; }
 @media (max-width: 900px) { .dash-row { grid-template-columns: 1fr; } }
+
+/* Dark theme: keep header plain, thin border */
+:root[data-theme="dark"] header.topbar {
+  border-bottom: 1px solid var(--border);
+}

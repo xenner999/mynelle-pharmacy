@@ -34,7 +34,10 @@
   }
 
   var REST = SUPABASE_URL.replace(/\/+$/, "") + "/rest/v1/" + TABLE;
-  var HEAD = { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY, "Content-Type": "application/json" };
+  var HEAD = { apikey: SUPABASE_KEY, "Content-Type": "application/json" };
+  // Legacy anon keys are JWTs (start with "eyJ") and go in Authorization too.
+  // New "sb_publishable_..." keys are NOT JWTs and must only be sent as apikey.
+  if (SUPABASE_KEY.indexOf("eyJ") === 0) HEAD.Authorization = "Bearer " + SUPABASE_KEY;
   var rawSet = Storage.prototype.setItem;
   var rawRemove = Storage.prototype.removeItem;
   var rawGet = Storage.prototype.getItem;

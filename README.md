@@ -69,6 +69,20 @@ python3 -m http.server 8000
 - **File names are case-sensitive on GitHub Pages.** `Login.html` starts with a capital letter - keep links in the same case.
 - Pages include a `noindex` tag so search engines skip the site.
 
+## Mynelle Assistant (local chatbot)
+
+Every admin page (except Login) has an **Ask** button at the bottom-right (shortcut: **Ctrl+/**, close with **Esc**).
+It answers questions about the system's own data: sales and comparisons, best/slowest sellers, categories, payment methods, busiest hours,
+cashier performance, low/out-of-stock, expiring/expired batches, expiry-loss risk, run-out forecast, reorder suggestions, purchase orders,
+inventory value, estimated profit, 7-day sales forecast, product look-ups (stock, price, batches, sales) and "how do I..." pointers.
+
+- It is **fully local**: no AI service, no internet, no API key. It reads the same browser storage as the rest of the app.
+- Files: `main/js/chatbot.js` (engine + UI) and `main/css/chatbot.css`. To add it to a new admin page, put `<script src="../js/chatbot.js"></script>` after `ui-assist.js`.
+- Cashiers do not get it (they only use the POS).
+- The conversation is kept per browser tab (sessionStorage) so it survives page changes; use the trash icon to clear it.
+- To add a new question type, add a handler to `H` and a line to `INTENTS` in `chatbot.js`.
+- Profit figures are estimates (last purchase-order cost, otherwise 70% of selling price) because products don't store a purchase cost.
+
 ## Brand colors
 
 The palette comes from the logo (Adobe Color extraction). Roles:
@@ -93,3 +107,13 @@ Stock status colors live at the top of `main/css/stock-status.css`; most other c
 - Phone/tablet layout: `main/css/responsive.css` (admin) and the bottom of `pos/css/pos.css` plus `pos/js/pos-mobile.js` (cashier: products-first layout, sticky order bar, bigger tap targets).
 - Print buttons and print layout: `main/js/print-records.js` and `main/css/print.css`.
 - Cashier "My Performance" page: `pos/html/performance.html` (daily goal is saved per cashier in the browser).
+
+## Supabase (shared database)
+
+Data is synced to Supabase so every device sees the same products, sales, accounts, time logs and settings.
+
+1. In Supabase open **SQL Editor**, paste `supabase-setup.sql`, and run it (creates the `app_kv` table).
+2. In `main/js/supabase-sync.js` set `SUPABASE_URL` to your project URL (Project Settings -> API). The publishable key is already filled in.
+3. Deploy. Cashier sessions, held carts and goals stay per-device.
+
+Security note: with no Supabase Auth, anyone who has the site's key can read/write `app_kv` (including account password hashes). Fine for a demo; for real use, move logins to Supabase Auth and tighten the RLS policies.

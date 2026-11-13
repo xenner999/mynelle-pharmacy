@@ -32,6 +32,16 @@
     var label = overdue ? "Overdue" : partly ? "Partly received" : STATUS_LABEL[o.status];
     return '<span class="or-pill ' + cls + '">' + label + "</span>";
   }
+  // Editable status: a dropdown styled like the pill, plus a small note when overdue / partly received.
+  function statusSelect(o) {
+    var overdue = O.isOverdue(o);
+    var partly = o.status === "ordered" && o.lines.some(function (l) { return l.receivedQty > 0 && l.receivedQty < l.qty; });
+    var note = overdue ? '<span class="or-pill overdue or-pill-note">Overdue</span>'
+      : partly ? '<span class="or-pill ordered or-pill-note">Partly received</span>' : "";
+    return '<select class="or-status-select or-pill ' + o.status + '" data-status="' + esc(o.id) + '" aria-label="Status of ' + esc(o.id) + '">' +
+      O.STATUSES.map(function (st) { return '<option value="' + st + '"' + (st === o.status ? " selected" : "") + ">" + STATUS_LABEL[st] + "</option>"; }).join("") +
+      "</select>" + note;
+  }
   function draftMap() {
     var m = {};
     O.getOrders().forEach(function (o) {
@@ -130,7 +140,7 @@
       list.map(function (o) {
         return '<tr class="an-clickable" data-order="' + esc(o.id) + '">' +
           "<td><b>" + esc(o.id) + "</b></td><td>" + esc(o.supplier || "\u2014") + "</td><td>" + fmtDate(o.createdAt) + "</td><td>" + fmtDate(o.expected) + "</td>" +
-          '<td class="num">' + o.lines.length + '</td><td class="num">' + A.money(O.total(o)) + "</td><td>" + statusPill(o) + "</td>" +
+          '<td class="num">' + o.lines.length + '</td><td class="num">' + A.money(O.total(o)) + "</td><td>" + statusSelect(o) + "</td>" +
           '<td class="or-act"><button type="button" class="or-btn small" data-open="' + esc(o.id) + '">' + (o.status === "ordered" ? "Receive" : "View") + "</button></td></tr>";
       }).join("") + "</tbody></table></div>";
   }
@@ -194,7 +204,7 @@
     var pm = productMap();
     var title = order ? order.id : "New order";
     var head = '<div class="or-card"><div class="or-card-head"><div><h2 id="orTitle">' + esc(title) + "</h2>" +
-      (order ? "<p>" + statusPill(order) + " Created " + fmtDate(order.createdAt) + (order.createdBy ? " by " + esc(order.createdBy) : "") +
+      (order ? "<p>" + statusSelect(order) + " Created " + fmtDate(order.createdAt) + (order.createdBy ? " by " + esc(order.createdBy) : "") +
         (order.orderedAt ? " \u00B7 Ordered " + fmtDate(order.orderedAt) : "") + (order.receivedAt ? " \u00B7 Received " + fmtDate(order.receivedAt) : "") + "</p>"
         : "<p>Choose what to buy, then save it as a draft or place it.</p>") +
       '</div><button type="button" class="or-x" data-act="close" aria-label="Close">&times;</button></div><div class="or-card-body">';
@@ -303,13 +313,31 @@
       '<div class="or-sign"><div>Prepared by' + (o.createdBy ? ": " + esc(o.createdBy) : "") + '</div><div>Approved by</div><div>Received by</div></div>';
   }
 
+  function changeStatus(sel) {
+    var id = sel.getAttribute("data-status"), next = sel.value, o = O.getOrder(id);
+    if (!o || o.status === next) return;
+    var warn = {
+      received: "Mark " + id + " as received?\n\nThis only changes the status. It does NOT add stock to inventory. To book delivered items into stock, leave it as Ordered and use \"Receive stock\".",
+      cancelled: "Mark " + id + " as cancelled?\n\nIts items will no longer count as incoming stock. Stock already received is not removed.",
+      draft: "Move " + id + " back to draft?",
+    }[next];
+    if (warn && !window.confirm(warn)) { sel.value = o.status; return; }
+    try { O.setStatus(id, next); }
+    catch (err) { sel.value = o.status; toast(err.message); return; }
+    toast(id + " is now " + STATUS_LABEL[next] + ".");
+    var reopen = modal && modal.id === id;
+    if (reopen) closeModal();
+    render();
+    if (reopen) openOrder(id);
+  }
+
   // ---- events ------------------------------------------------------------
   document.addEventListener("click", function (e) {
     var t = e.target;
     var el;
     if ((el = t.closest("[data-addone]"))) { openNew([el.getAttribute("data-addone")]); return; }
     if ((el = t.closest("[data-open]"))) { e.stopPropagation(); openOrder(el.getAttribute("data-open")); return; }
-    if ((el = t.closest("tr[data-order]")) && !t.closest("a, input, button")) { openOrder(el.getAttribute("data-order")); return; }
+    if ((el = t.closest("tr[data-order]")) && !t.closest("a, input, button, select")) { openOrder(el.getAttribute("data-order")); return; }
     if ((el = t.closest("[data-tab]"))) { filter = el.getAttribute("data-tab"); var os = O.getOrders(); renderTabs(os); renderOrders(os); return; }
     if (t.closest("#newOrderBtn")) { openNew([]); return; }
     if (t.closest("#createFromSel")) { openNew(Object.keys(selected)); return; }
@@ -363,6 +391,7 @@
   });
   document.addEventListener("change", function (e) {
     var t = e.target, id;
+    if (t.classList && t.classList.contains("or-status-select")) { changeStatus(t); return; }
     if ((id = t.getAttribute && t.getAttribute("data-sel"))) {
       if (t.checked) selected[id] = true; else delete selected[id];
       updateCreateBtn();

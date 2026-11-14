@@ -38,8 +38,6 @@
       link.appendChild(wrap);
     }
     wrap.innerHTML = "";
-    // One stacked badge: the most urgent type sits in front with its count,
-    // and a "+" says more alert types are tucked behind it.
     var kinds = ["out", "low", "exp"].filter(function (k) { return c[k] > 0; });
     if (!kinds.length) { link.title = "Alerts"; return; }
     var summary = kinds
@@ -47,25 +45,17 @@
       .join(" \u00B7 ");
     link.title = "Alerts \u2014 " + summary;
     wrap.setAttribute("aria-label", summary);
-    // back-most first, front-most last (later siblings paint on top)
-    kinds.slice(1).reverse().forEach(function (k) {
-      var back = document.createElement("span");
-      back.className = "nav-badge behind " + k;
-      back.setAttribute("aria-hidden", "true");
-      back.title = summary;
-      wrap.appendChild(back);
+    // One stack: the highest-priority type (out > low > expiring) sits in
+    // front on the left with its count; the others peek out from behind it.
+    kinds.forEach(function (k, i) {
+      var b = document.createElement("span");
+      b.className = "nav-badge " + (i === 0 ? "front " : "behind ") + k;
+      b.style.zIndex = String(kinds.length - i); // front = highest
+      b.title = summary;
+      if (i === 0) b.textContent = c[k] > 99 ? "99+" : String(c[k]);
+      else b.setAttribute("aria-hidden", "true");
+      wrap.appendChild(b);
     });
-    var front = document.createElement("span");
-    front.className = "nav-badge front " + kinds[0];
-    front.title = summary;
-    var n = c[kinds[0]] > 99 ? "99" : String(c[kinds[0]]);
-    front.textContent = n;
-    if (kinds.length > 1 || c[kinds[0]] > 99) {
-      var plus = document.createElement("sup");
-      plus.textContent = "+";
-      front.appendChild(plus);
-    }
-    wrap.appendChild(front);
   }
 
   render();

@@ -488,6 +488,147 @@ var MynelleAuth = (function () {
     return true;
   }
 
+  // ---------- forgot password: reset link sent to the account's email ----------
+  //
+  // The person only types their USERNAME on the login page. The email address
+  // is looked up from the account, a one-time link is e-mailed to it (through
+  // EmailJS - see main/js/reset-config.js), and the link opens the "set a new
+  // password" screen. Only a SHA-256 hash of the one-time token is stored.
+  var RESET_KEY = "mynelle_reset_tokens";
+  var RESET_TTL_MS = 30 * 60 * 1000; // link valid for 30 minutes
+  var RESET_COOLDOWN_MS = 60 * 1000; // one email per minute per account
+
+  function getResetTokens() {
+    try {
+      var list = JSON.parse(localStorage.getItem(RESET_KEY) || "[]");
+      var now = Date.now();
+      return (Array.isArray(list) ? list : []).filter(function (t) {
+        return t && t.exp > now;
+      });
+    } catch (e) {
+      return [];
+    }
+  }
+  function saveResetTokens(list) {
+    try {
+      localStorage.setItem(RESET_KEY, JSON.stringify(list));
+    } catch (e) {
+      /* storage unavailable */
+    }
+  }
+  function randomToken() {
+    var bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes).map(function (b) {
+      return b.toString(16).padStart(2, "0");
+    }).join("");
+  }
+  function maskEmail(email) {
+    var parts = String(email).split("@");
+    var name = parts[0];
+    var shown = name.length <= 2 ? name.charAt(0) : name.charAt(0) + "\u2022\u2022\u2022" + name.charAt(name.length - 1);
+    return shown + "@" + parts[1];
+  }
+  function emailConfigured() {
+    var c = window.MYNELLE_EMAIL;
+    return !!(c && c.serviceId && c.templateId && c.publicKey);
+  }
+
+  // identifier = username (an email also works). Returns { email: "x\u2022\u2022\u20229@gmail.com" }.
+  async function requestPasswordReset(identifier) {
+    identifier = String(identifier || "").trim();
+    if (!identifier)
+      throw new Error("Type your username in the Username field first, then click Forgot password.");
+    await ensureSeedAdmin();
+    var account = findAccount(identifier);
+    if (!account) throw new Error("No account found with that username.");
+    var status = normalizeStatus(account.status);
+    if (status !== "active")
+      throw new Error("This account is " + status + ". Ask an admin to reactivate it.");
+    var email = String(account.email || "").trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || /\.local$/i.test(email))
+      throw new Error("This account has no real email address on file. Ask an administrator to update it in Manage accounts.");
+    if (!emailConfigured())
+      throw new Error("Email sending is not set up yet. Fill in main/js/reset-config.js, or ask an administrator to reset your password.");
+
+    var tokens = getResetTokens();
+    var recent = tokens.filter(function (t) {
+      return t.id === account.id && Date.now() - t.created < RESET_COOLDOWN_MS;
+    })[0];
+    if (recent) throw new Error("A reset link was just sent. Please wait a minute before asking again.");
+
+    var token = randomToken();
+    var record = {
+      id: account.id,
+      hash: await sha256(token),
+      created: Date.now(),
+      exp: Date.now() + RESET_TTL_MS,
+    };
+    tokens = tokens.filter(function (t) { return t.id !== account.id; });
+    tokens.push(record);
+    saveResetTokens(tokens);
+
+    var base = window.location.origin + window.location.pathname;
+    var cfg = window.MYNELLE_EMAIL;
+    var res;
+    try {
+      res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_id: cfg.serviceId,
+          template_id: cfg.templateId,
+          user_id: cfg.publicKey,
+          template_params: {
+            to_email: email,
+            to_name: account.fullName,
+            username: account.username,
+            reset_link: base + "?reset=" + token,
+            expires_in: Math.round(RESET_TTL_MS / 60000) + " minutes",
+          },
+        }),
+      });
+    } catch (e) {
+      res = null;
+    }
+    if (!res || !res.ok) {
+      saveResetTokens(getResetTokens().filter(function (t) { return t.hash !== record.hash; }));
+      throw new Error("Could not send the email. Check your internet connection and try again.");
+    }
+    return { email: maskEmail(email) };
+  }
+
+  async function findResetRecord(token) {
+    if (!token) return null;
+    var hash = await sha256(String(token));
+    var rec = getResetTokens().filter(function (t) { return t.hash === hash; })[0];
+    if (!rec) return null;
+    var account = getAccounts().filter(function (a) { return a.id === rec.id; })[0];
+    return account ? { rec: rec, account: account } : null;
+  }
+
+  // Used when the reset page opens: returns the (public) account or null if the link is bad/expired.
+  async function checkResetToken(token) {
+    var found = await findResetRecord(token);
+    return found ? publicAccount(found.account) : null;
+  }
+
+  async function resetPasswordWithToken(token, newPassword, confirmPassword) {
+    var found = await findResetRecord(token);
+    if (!found) throw new Error("This reset link is invalid or has expired. Request a new one.");
+    var account = found.account;
+    checkSecret(account.role, newPassword);
+    if (confirmPassword !== undefined && newPassword !== confirmPassword)
+      throw new Error(account.role === "cashier" ? "PINs do not match." : "Passwords do not match.");
+    var accounts = getAccounts();
+    var target = accounts.filter(function (a) { return a.id === account.id; })[0];
+    target.passwordHash = await sha256(String(newPassword));
+    saveAccounts(accounts);
+    // one-time use
+    saveResetTokens(getResetTokens().filter(function (t) { return t.hash !== found.rec.hash; }));
+    return true;
+  }
+
   // ---------- public API (tries backend, falls back to local) ----------
 
   async function login(payload) {
@@ -543,6 +684,9 @@ var MynelleAuth = (function () {
     verifyCashier: verifyCashier,
     hasCashiers: hasCashiers,
     changeOwnPassword: changeOwnPassword,
+    requestPasswordReset: requestPasswordReset,
+    checkResetToken: checkResetToken,
+    resetPasswordWithToken: resetPasswordWithToken,
     listStaff: listStaff,
     nextStaffId: nextStaffId,
     createStaff: createStaff,

@@ -52,7 +52,95 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-document.getElementById("forgotLink").addEventListener("click", (e) => {
+// Forgot password: its own screen. Only the username is typed; the email is found automatically.
+const forgotLink = document.getElementById("forgotLink");
+const forgotForm = document.getElementById("forgotForm");
+const forgotUser = document.getElementById("forgotUser");
+const forgotError = document.getElementById("forgotError");
+const forgotInfo = document.getElementById("forgotInfo");
+const forgotBtn = document.getElementById("forgotBtn");
+const pageTitle = document.querySelector(".auth-title");
+const pageSub = document.querySelector(".auth-subtitle");
+const loginTitle = pageTitle.textContent;
+const loginSub = pageSub.textContent;
+
+function showForgot(show) {
+  form.hidden = show;
+  forgotForm.hidden = !show;
+  pageTitle.textContent = show ? "Reset password" : loginTitle;
+  pageSub.textContent = show ? "Enter your username and we will email you a reset link." : loginSub;
+  forgotError.textContent = "";
+  forgotInfo.textContent = "";
+  if (show) {
+    forgotUser.value = document.getElementById("username").value.trim();
+    forgotUser.focus();
+  }
+}
+forgotLink.addEventListener("click", (e) => { e.preventDefault(); showForgot(true); });
+document.getElementById("backToLogin").addEventListener("click", (e) => { e.preventDefault(); showForgot(false); });
+
+forgotForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  alert("Ask an administrator to reset your password from Manage accounts.");
+  forgotError.textContent = "";
+  forgotInfo.textContent = "";
+  forgotBtn.disabled = true;
+  forgotBtn.textContent = "Sending...";
+  try {
+    const result = await MynelleAuth.requestPasswordReset(forgotUser.value);
+    forgotInfo.textContent =
+      "A reset link was sent to " + result.email + ". Open it within 30 minutes (check Spam too).";
+  } catch (err) {
+    forgotError.textContent = err.message || "Could not send the reset link.";
+  } finally {
+    forgotBtn.disabled = false;
+    forgotBtn.textContent = "Reset";
+  }
 });
+
+// Opened from the email link: Login.html?reset=TOKEN -> show the new-password form.
+(async function showResetIfLinked() {
+  const token = new URLSearchParams(window.location.search).get("reset");
+  if (!token) return;
+  const resetForm = document.getElementById("resetForm");
+  const resetError = document.getElementById("resetError");
+  const resetBtn = document.getElementById("resetBtn");
+  const title = pageTitle;
+  const subtitle = pageSub;
+  form.hidden = true;
+  resetForm.hidden = false;
+  title.textContent = "Reset password";
+
+  const account = await MynelleAuth.checkResetToken(token);
+  if (!account) {
+    subtitle.textContent = "";
+    resetForm.querySelectorAll("label, .field, #resetBtn").forEach((el) => (el.hidden = true));
+    resetError.textContent = "This reset link is invalid or has expired. Go back and request a new one.";
+    return;
+  }
+  const noun = account.role === "cashier" ? "PIN" : "password";
+  subtitle.textContent = "Choose a new " + noun + " for " + account.username + ".";
+  document.getElementById("newPasswordLabel").textContent = "New " + noun;
+  document.getElementById("confirmPasswordLabel").textContent = "Confirm new " + noun;
+  document.getElementById("newPassword").placeholder =
+    account.role === "cashier" ? "4 to 6 digits" : "At least 8 characters";
+
+  resetForm.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    resetError.textContent = "";
+    resetBtn.disabled = true;
+    resetBtn.textContent = "Saving...";
+    try {
+      await MynelleAuth.resetPasswordWithToken(
+        token,
+        document.getElementById("newPassword").value,
+        document.getElementById("confirmPassword").value
+      );
+      alert("Your " + noun + " was changed. You can log in now.");
+      window.location.href = "Login.html";
+    } catch (err) {
+      resetError.textContent = err.message || "Could not reset. Try again.";
+      resetBtn.disabled = false;
+      resetBtn.textContent = "Set new password";
+    }
+  });
+})();

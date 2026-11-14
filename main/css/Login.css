@@ -368,3 +368,15 @@ input[type="email"]:focus {
   border-image: linear-gradient(90deg, #0442bf 0%, #05aff2 55%, #d90416 100%) 1;
 }
 
+
+.ok-msg {
+  min-height: 0;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #15803d;
+}
+.ok-msg:empty { display: none; }
+#resetForm[hidden] { display: none; }
+#loginForm[hidden] { display: none; }
+#forgotForm[hidden] { display: none; }

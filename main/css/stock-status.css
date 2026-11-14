@@ -52,17 +52,21 @@
 .stock-pill.low::before { background: var(--st-low); }
 .stock-pill.out::before { background: var(--st-out); }
 
-/* Sidebar badge: one stack — most urgent type in front, others peeking out behind */
+/* Sidebar badges: one overlapping stack, highest priority in front (left) */
 .nav-badges {
   margin-left: auto;
   display: inline-flex;
-  flex-direction: row-reverse; /* first child = right-most (back), last = left-most (front) */
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   padding-right: 2px;
+  flex-shrink: 0;
+  isolation: isolate;
 }
 .nav-badge {
+  position: relative;
   box-sizing: border-box;
-  min-width: 22px;
+  flex: 0 0 auto;
   height: 22px;
   border-radius: 11px;
   color: #fff;
@@ -71,12 +75,12 @@
   font-weight: 700;
   line-height: 22px;
   text-align: center;
-  box-shadow: 0 0 0 2px var(--card, #fff);
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px var(--card, #fff); /* ring that separates overlapping badges */
 }
-.nav-badge + .nav-badge { margin-right: -9px; } /* each one overlaps the one behind it */
+.nav-badge + .nav-badge { margin-left: -9px; } /* each one tucks behind the one before it */
+.nav-badge.front { min-width: 26px; height: 26px; padding: 0 7px; line-height: 26px; font-size: 12.5px; }
 .nav-badge.behind { width: 22px; padding: 0; }
-.nav-badge.front { padding: 0 6px; min-width: 26px; height: 26px; line-height: 26px; font-size: 12.5px; }
-.nav-badge.front sup { font-size: 9px; font-weight: 700; margin-left: 1px; vertical-align: top; position: relative; top: 4px; }
 .nav-badge.out { background: var(--st-out); }
 .nav-badge.low { background: var(--st-low); }
 .nav-badge.exp { background: var(--st-exp); }

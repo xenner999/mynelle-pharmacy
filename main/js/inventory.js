@@ -834,8 +834,24 @@ picFile.addEventListener("change", function () {
 });
 picRemove.addEventListener("click", function () {
   pendingPic = "";
+  autoPic = "";
   showPic("");
 });
+
+// Adding a product that already has a picture (same name + brand): reuse it automatically.
+var autoPic = "";
+function autoFillPicture() {
+  if (editingProduct || pendingPic !== undefined) return;
+  var generic = fName.value.trim();
+  var strength = fDoseNum.value.trim() && fDoseUnit.value ? String(Number(fDoseNum.value)) + fDoseUnit.value : "";
+  var found = MynelleStore.findImageByNameBrand(MynelleStore.composeName(generic, strength), fBrand.value);
+  autoPic = found || "";
+  showPic(autoPic);
+}
+[fName, fBrand, fDoseNum].forEach(function (el) { el.addEventListener("input", autoFillPicture); });
+fDoseUnit.addEventListener("change", autoFillPicture);
+fBrand.addEventListener("change", autoFillPicture);
+fName.addEventListener("change", autoFillPicture);
 
 function openModal(product) {
   var settings = MynelleStore.getSettings();
@@ -847,6 +863,7 @@ function openModal(product) {
   modalSubmit.textContent = editingProduct ? "Save changes" : "Add product";
   idTouched = false;
   pendingPic = undefined;
+  autoPic = "";
   errPicture.textContent = "";
   showPic(editingProduct ? MynelleStore.getProductImage(editingProduct.id) : "");
   fId.readOnly = !!editingProduct;
@@ -1191,6 +1208,7 @@ form.addEventListener("submit", function (e) {
   var picOk = true;
   if (pendingPic === "") MynelleStore.removeProductImage(savedId);
   else if (pendingPic) picOk = MynelleStore.setProductImage(savedId, pendingPic);
+  else if (!editingProduct && autoPic) picOk = MynelleStore.setProductImage(savedId, autoPic);
 
   closeModal();
   document.dispatchEvent(new CustomEvent("mynelle:products-changed"));

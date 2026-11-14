@@ -466,7 +466,7 @@ var MynelleStore = (function () {
       return p.id !== id;
     });
     saveProducts(list);
-    removeProductImage(id);
+    removeProductImageOnly([id]);
     return list;
   }
 
@@ -937,7 +937,11 @@ var MynelleStore = (function () {
   // ---- Product pictures ----
   // Kept in their own key ({ productId: dataUrl }) so the big image strings are
   // not re-parsed every time the product list is read.
-  function getProductImages() {
+  //
+  // Products with the same name + brand (e.g. a second "Paracetamol 500mg /
+  // Biogesic" entry) share one picture: a picture set on any of them is used
+  // by all of them, including ones added later.
+  function rawImages() {
     try {
       var raw = localStorage.getItem(IMAGES_KEY);
       var map = raw ? JSON.parse(raw) : {};
@@ -946,13 +950,55 @@ var MynelleStore = (function () {
       return {};
     }
   }
+  function normText(x) {
+    return String(x == null ? "" : x).toLowerCase().replace(/\s+/g, " ").trim();
+  }
+  function imageSignature(name, brand) {
+    return normText(name) + "|" + normText(brand);
+  }
+  function productSignature(p) {
+    return imageSignature(p.name || composeName(p.genericName, p.strength), p.brand);
+  }
+  function siblingIds(productId) {
+    var all = getAllProducts();
+    var me = all.filter(function (p) { return p.id === productId; })[0];
+    if (!me) return [productId];
+    var sig = productSignature(me);
+    return all.filter(function (p) { return productSignature(p) === sig; }).map(function (p) { return p.id; });
+  }
+  // { productId: dataUrl } with same-product duplicates filled in.
+  function getProductImages() {
+    var map = rawImages();
+    var all = getAllProducts();
+    var bySig = {};
+    all.forEach(function (p) {
+      if (map[p.id]) bySig[productSignature(p)] = bySig[productSignature(p)] || map[p.id];
+    });
+    var out = Object.assign({}, map);
+    all.forEach(function (p) {
+      if (!out[p.id] && bySig[productSignature(p)]) out[p.id] = bySig[productSignature(p)];
+    });
+    return out;
+  }
   function getProductImage(productId) {
     return getProductImages()[productId] || "";
   }
+  // Picture already saved for a product with this name + brand (used by the Add product form).
+  function findImageByNameBrand(name, brand) {
+    var sig = imageSignature(name, brand);
+    if (!normText(name)) return "";
+    var map = rawImages();
+    var hit = getAllProducts().filter(function (p) {
+      return map[p.id] && productSignature(p) === sig;
+    })[0];
+    return hit ? map[hit.id] : "";
+  }
   // Returns true when saved, false when the browser storage is full/unavailable.
   function setProductImage(productId, dataUrl) {
-    var map = getProductImages();
-    map[productId] = dataUrl;
+    var map = rawImages();
+    siblingIds(productId).concat([productId]).forEach(function (id) {
+      map[id] = dataUrl;
+    });
     try {
       localStorage.setItem(IMAGES_KEY, JSON.stringify(map));
       return true;
@@ -960,15 +1006,22 @@ var MynelleStore = (function () {
       return false;
     }
   }
-  function removeProductImage(productId) {
-    var map = getProductImages();
-    if (!(productId in map)) return;
-    delete map[productId];
+  function removeProductImageOnly(ids) {
+    var map = rawImages();
+    var changed = false;
+    ids.forEach(function (id) {
+      if (id in map) { delete map[id]; changed = true; }
+    });
+    if (!changed) return;
     try {
       localStorage.setItem(IMAGES_KEY, JSON.stringify(map));
     } catch (e) {
       /* storage unavailable */
     }
+  }
+  // Removing the picture of one product removes it from its same-name duplicates too.
+  function removeProductImage(productId) {
+    removeProductImageOnly(siblingIds(productId).concat([productId]));
   }
 
   // Removes products, sales and dismissed alerts. Settings are kept unless
@@ -1045,6 +1098,7 @@ var MynelleStore = (function () {
     clearData: clearData,
     getProductImages: getProductImages,
     getProductImage: getProductImage,
+    findImageByNameBrand: findImageByNameBrand,
     setProductImage: setProductImage,
     removeProductImage: removeProductImage,
     IMAGES_KEY: IMAGES_KEY,

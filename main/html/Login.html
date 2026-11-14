@@ -91,14 +91,41 @@
               </button>
             </div>
             <div class="error-msg" id="errorMsg" role="alert"></div>
+            <div class="ok-msg" id="infoMsg" role="status"></div>
 
             <button type="submit" class="login-btn" id="loginBtn">Login</button>
             <a href="#" class="forgot" id="forgotLink">Forgot password</a>
+          </form>
+
+          <form id="forgotForm" novalidate hidden>
+            <label class="first" for="forgotUser">Username</label>
+            <div class="field">
+              <input type="text" id="forgotUser" placeholder="Enter your username" autocomplete="username" required />
+            </div>
+            <div class="error-msg" id="forgotError" role="alert"></div>
+            <div class="ok-msg" id="forgotInfo" role="status"></div>
+            <button type="submit" class="login-btn" id="forgotBtn">Reset</button>
+            <a href="#" class="forgot" id="backToLogin">&lsaquo; Back to sign in</a>
+          </form>
+
+          <form id="resetForm" novalidate hidden>
+            <label class="first" for="newPassword" id="newPasswordLabel">New password</label>
+            <div class="field">
+              <input type="password" id="newPassword" placeholder="At least 8 characters" autocomplete="new-password" required />
+            </div>
+            <label for="confirmPassword" id="confirmPasswordLabel">Confirm new password</label>
+            <div class="field">
+              <input type="password" id="confirmPassword" placeholder="Re-enter the new password" autocomplete="new-password" required />
+            </div>
+            <div class="error-msg" id="resetError" role="alert"></div>
+            <button type="submit" class="login-btn" id="resetBtn">Set new password</button>
+            <a href="Login.html" class="forgot">&lsaquo; Back to sign in</a>
           </form>
         </div>
       </main>
     </div>
 
+    <script src="../js/reset-config.js"></script>
     <script src="../js/auth-store.js"></script>
     <script src="../js/Login.js"></script>
   <script src="../js/ui-confirm.js"></script>
